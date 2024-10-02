@@ -11,6 +11,7 @@ namespace CoffeeManagementAPI.Model
         public int VoucherID { get; set; }
 
         public string VoucherCode { get; set; } = string.Empty;
+        [Column(TypeName ="decimal (18,2)")]
         public decimal VoucherValue { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public DateTime ExpiredDate { get; set; }

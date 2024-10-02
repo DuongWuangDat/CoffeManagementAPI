@@ -3,13 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoffeeManagementAPI.Model
 {
-    public class Category
+    public class Token
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CategoryID { get; set; }
-        public string CategoryName { get; set; } = string.Empty;
-
-        public List<Product> Products { get; set; } = new List<Product>();
+        public int TokenId { get; set; }
+        public string TokenName { get; set; } = string.Empty;
+        public bool IsRevoked { get; set; } = false;
     }
 }

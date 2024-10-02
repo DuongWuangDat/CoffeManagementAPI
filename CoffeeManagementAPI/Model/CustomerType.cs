@@ -11,5 +11,7 @@ namespace CoffeeManagementAPI.Model
         public string CustomerTypeName { get; set; } = string.Empty;
         [Column(TypeName = "decimal(18,2)")]
         public decimal BoundaryRevenue { get; set; } = 0;
+
+        public List<Customer> Customers { get; set; } = new List<Customer>();
     }
 }

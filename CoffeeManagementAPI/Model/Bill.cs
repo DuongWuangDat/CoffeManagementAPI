@@ -18,8 +18,8 @@ namespace CoffeeManagementAPI.Model
 
         public int VoucherId { get; set; }
         public Voucher? Voucher { get; set; }
-        public int AppUserId { get; set; }
-        public AppUser? AppUser { get; set; }
+        public int StaffId { get; set; }
+        public Staff? Staff { get; set; }
         public int PayTypeId { get; set; }
         public PayType? PayType { get; set; }
     }
