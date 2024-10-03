@@ -1,4 +1,5 @@
 ﻿using CoffeeManagementAPI.Model;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace CoffeeManagementAPI.Interface
 {
@@ -8,6 +9,8 @@ namespace CoffeeManagementAPI.Interface
         public string GenerateAccessToken(Staff staff);
         public  Task<string> GenerateRefreshToken(Staff staff);
 
-        public bool IsValidateToken (string token);
+        public Task<bool> IsValidateToken (string token);
+
+        public string RefreshThisToken(string token);
     }
 }

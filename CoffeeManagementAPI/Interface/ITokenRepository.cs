@@ -4,5 +4,7 @@
     {
 
         public Task CreateToken(string token);
+
+        public Task<bool> IsTokenIsRevoked (string token);
     }
 }
