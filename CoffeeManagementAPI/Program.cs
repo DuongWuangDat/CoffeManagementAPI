@@ -84,10 +84,19 @@ builder.Services.AddAuthentication(option =>
     };
 });
 
+
+
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 builder.Services.AddScoped<IStaffRepository, StaffRepository>();
 builder.Services.AddScoped<IAuthorization, AuthorizationService>();
+builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IVoucherRepository, VoucherRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IBillRepository, BillRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+
 var app = builder.Build();
 
 

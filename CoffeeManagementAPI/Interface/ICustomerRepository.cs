@@ -6,15 +6,15 @@ namespace CoffeeManagementAPI.Interface
     public interface ICustomerRepository
     {
 
-        Task CreateNewCustomer(Customer customer);
+        Task<bool> CreateNewCustomer(Customer customer);
 
-        Task DeleteCustomer(int i);
+        Task<bool> DeleteCustomer(int i);
 
-        Task UpadateCustomer(Customer customer, int id);
+        Task<bool> UpadateCustomer(Customer customer, int id);
 
         Task<List<CustomerDTO>> GetAllCustomer();
 
-        Task<CustomerDTO> GetCustomerById(int id);
+        Task<CustomerDTO?> GetCustomerById(int id);
 
     }
 }
