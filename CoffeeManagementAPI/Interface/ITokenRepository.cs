@@ -3,8 +3,8 @@
     public interface ITokenRepository
     {
 
-        public Task CreateToken(string token);
+        Task CreateToken(string token);
 
-        public Task<bool> IsTokenIsRevoked (string token);
+        Task<bool> IsTokenIsRevoked (string token);
     }
 }

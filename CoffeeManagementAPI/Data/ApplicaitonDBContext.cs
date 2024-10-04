@@ -30,6 +30,54 @@ namespace CoffeeManagementAPI.Data
             modelBuilder.Entity<Bill>().Property(p => p.Status).HasDefaultValue("Chưa thanh toán");
             modelBuilder.Entity<Bill>().ToTable(t=> t.HasCheckConstraint("CK_STATUS_BILL", "[Status] IN ('Đã thanh toán', 'Chưa thanh toán')"));
             modelBuilder.Entity<BillDetail>().HasKey(e => new {e.ProductId, e.BillId});
+
+            List<Category> categories = new List<Category>
+            {
+                new Category
+                {
+                    CategoryID=1,
+                    CategoryName = "Đồ ăn",
+                },
+                new Category
+                {
+                    CategoryID = 2,
+                    CategoryName = "Đồ uống"
+                }
+            };
+
+            List<VoucherType> voucherTypes = new List<VoucherType>
+            {
+                new VoucherType
+                {
+                    VoucherTypeId = 1,
+                    TypeName = "Theo phần trăm"
+                },
+                new VoucherType
+                {
+                    VoucherTypeId=2,
+                    TypeName = "Giảm trực tiếp"
+                }
+            };
+
+            List<PayType> payTypes = new List<PayType>
+            {
+                new()
+                {
+                    PayTypeId = 1,
+                    PayTypeName = "Online"
+                },
+                new()
+                {
+                    PayTypeId =2 ,
+                    PayTypeName = "Tiền mặt"
+                }
+            };
+
+
+            modelBuilder.Entity<Category>().HasData(categories);
+            modelBuilder.Entity<VoucherType>().HasData(voucherTypes);
+            modelBuilder.Entity<PayType>().HasData(payTypes);
+
         }
     }
 }

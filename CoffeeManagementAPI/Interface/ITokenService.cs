@@ -6,11 +6,11 @@ namespace CoffeeManagementAPI.Interface
     public interface ITokenService
     {
 
-        public string GenerateAccessToken(Staff staff);
-        public  Task<string> GenerateRefreshToken(Staff staff);
+        string GenerateAccessToken(Staff staff);
+        Task<string> GenerateRefreshToken(Staff staff);
 
-        public Task<bool> IsValidateToken (string token);
+        Task<bool> IsValidateToken (string token);
 
-        public string RefreshThisToken(string token);
+        string RefreshThisToken(string token);
     }
 }

@@ -4,6 +4,7 @@ using CoffeeManagementAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoffeeManagementAPI.Migrations
 {
     [DbContext(typeof(ApplicaitonDBContext))]
-    partial class ApplicaitonDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241004032400_AddVoucherType")]
+    partial class AddVoucherType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -184,18 +187,6 @@ namespace CoffeeManagementAPI.Migrations
                     b.HasKey("PayTypeId");
 
                     b.ToTable("PayTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            PayTypeId = 1,
-                            PayTypeName = "Online"
-                        },
-                        new
-                        {
-                            PayTypeId = 2,
-                            PayTypeName = "Tiền mặt"
-                        });
                 });
 
             modelBuilder.Entity("CoffeeManagementAPI.Model.Product", b =>

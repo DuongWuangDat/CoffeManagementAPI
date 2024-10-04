@@ -50,6 +50,38 @@ builder.Services.AddAuthentication(option =>
         ValidAudience = builder.Configuration["JWT:Aud"],
         
     };
+
+    option.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            context.Response.ContentType = "application/json";
+
+            var err = new
+            {
+                message = "Authentication is failed",
+                detail = context.Exception?.Message,
+                statusCode = StatusCodes.Status401Unauthorized,
+
+            };
+            return context.Response.WriteAsync(JsonSerializer.Serialize(err));
+        },
+
+        OnChallenge = context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            context.Response.ContentType = "application/json";
+
+            var err = new
+            {
+                message = "Authentication is failed",
+                statusCode = StatusCodes.Status401Unauthorized,
+
+            };
+            return context.Response.WriteAsync(JsonSerializer.Serialize(err));
+        }
+    };
 });
 
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -58,11 +90,34 @@ builder.Services.AddScoped<IStaffRepository, StaffRepository>();
 builder.Services.AddScoped<IAuthorization, AuthorizationService>();
 var app = builder.Build();
 
+
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    app.UseExceptionHandler(appBuilder =>
+    {
+
+        appBuilder.Run(async context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            context.Response.ContentType = "application/json";
+
+            var err = new
+            {
+                message = "Something went wrong",
+                statusCode = 500
+            };
+
+            await context.Response.WriteAsync(JsonSerializer.Serialize(err));
+        });
+    });
 }
 
 
@@ -91,6 +146,7 @@ app.Use(async (context, next) =>
 
         if (!checkToken)
         {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(JsonSerializer.Serialize(new
             {
