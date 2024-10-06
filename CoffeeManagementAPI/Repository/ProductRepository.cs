@@ -79,7 +79,6 @@ namespace CoffeeManagementAPI.Repository
             }
 
             prod.Price = newProduct.Price;
-            prod.ProductID = newProduct.ProductID;
             prod.ProductName = newProduct.ProductName;
             prod.CategoryId = newProduct.CategoryId;
             prod.IsSoldOut = newProduct.IsSoldOut;

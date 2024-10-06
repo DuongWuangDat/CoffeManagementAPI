@@ -21,6 +21,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpGet("getall")]
+        [Authorize(Roles ="Admin,Staff")]
         public async Task<IActionResult> GetAllProduct() {
 
             if (!ModelState.IsValid) {
@@ -34,6 +35,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpGet("getbyid/{id:int}")]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> GetProductById([FromRoute] int id)
         {
             if (!ModelState.IsValid)

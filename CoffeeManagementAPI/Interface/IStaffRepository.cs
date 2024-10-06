@@ -9,6 +9,12 @@ namespace CoffeeManagementAPI.Interface
         public Task RegisterStaff(Staff staff);
         public Task<Staff?> FindUser(string username);
 
+        Task<List<StaffDTO>> GetAllStaff();
+
+        Task<bool> UpdateStaff(Staff staff, int i);
+
+        Task<bool> DeleteStaff(int i);
+
 
 
     }

@@ -18,6 +18,17 @@ namespace CoffeeManagementAPI.Mappers.Cus
             };
         }
 
+        public static Customer toCustomerFromCreated (this CreateCustomerDTO createCustomerDTO)
+        {
+            return new()
+            {
+                CustomerName = createCustomerDTO.CustomerName,
+                PhoneNumber = createCustomerDTO.PhoneNumber,
+                CustomerTypeId = createCustomerDTO.CustomerTypeId,
+                Revenue = createCustomerDTO.Revenue,
+            };
+        }
+
         
     }
 }
