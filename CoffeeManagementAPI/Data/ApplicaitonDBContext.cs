@@ -30,6 +30,20 @@ namespace CoffeeManagementAPI.Data
             modelBuilder.Entity<Bill>().Property(p => p.Status).HasDefaultValue("Chưa thanh toán");
             modelBuilder.Entity<Bill>().ToTable(t=> t.HasCheckConstraint("CK_STATUS_BILL", "[Status] IN ('Đã thanh toán', 'Chưa thanh toán')"));
             modelBuilder.Entity<BillDetail>().HasKey(e => new {e.ProductId, e.BillId});
+            modelBuilder.Entity<Voucher>().ToTable(t => t.HasCheckConstraint("CK_VOUCHER_DATE", "[CreatedDate] < [ExpiredDate]"));
+
+
+            //Set on delete
+            foreach(var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var foreginKeys = entityType.GetForeignKeys();
+
+                foreach(var foreginKey in foreginKeys)
+                {
+                    foreginKey.DeleteBehavior = DeleteBehavior.SetNull;
+                }
+            }
+
 
             List<Category> categories = new List<Category>
             {

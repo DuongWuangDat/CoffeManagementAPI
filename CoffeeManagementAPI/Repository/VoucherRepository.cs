@@ -1,32 +1,61 @@
-﻿using CoffeeManagementAPI.DTOs.Voucher;
+﻿using CoffeeManagementAPI.Data;
+using CoffeeManagementAPI.DTOs.Voucher;
 using CoffeeManagementAPI.Interface;
+using CoffeeManagementAPI.Mappers.VoucherMapper;
 using CoffeeManagementAPI.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeManagementAPI.Repository
 {
     public class VoucherRepository : IVoucherRepository
     {
-        public Task CreateNewVoucher(Voucher newVoucher)
+        ApplicaitonDBContext _context;
+        public VoucherRepository(ApplicaitonDBContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public async Task<bool> CreateNewVoucher(Voucher newVoucher)
+        {
+            await _context.Vouchers.AddAsync(newVoucher);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
-        public Task DeleteVoucher(int id)
+        public async Task<bool> DeleteVoucher(int id)
         {
-            throw new NotImplementedException();
+            var voucher = await _context.Vouchers.FirstOrDefaultAsync(v => v.VoucherID == id);
+            if (voucher == null)
+            {
+                return false;
+            }
+
+            _context.Vouchers.Remove(voucher);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
-        public Task<List<VoucherDTO>> GetAllVoucher()
+        public async Task<List<VoucherDTO>> GetAllVoucher()
         {
-            throw new NotImplementedException();
+            var voucherList = await _context.Vouchers.Select(s => s.toVoucherDTO()).ToListAsync();
+
+            return voucherList;
         }
 
-        public Task<VoucherDTO> GetVoucherById()
+        public async Task<VoucherDTO?> GetVoucherById(int id)
         {
-            throw new NotImplementedException();
+            var voucher = await _context.Vouchers.FirstOrDefaultAsync(v => v.VoucherID == id);
+
+            if(voucher == null)
+            {
+                return null;
+            }
+
+            return voucher.toVoucherDTO();
         }
 
-        public Task UpdateVoucher(Voucher voucher, int id)
+        public Task<bool> UpdateVoucher(Voucher voucher, int id)
         {
             throw new NotImplementedException();
         }

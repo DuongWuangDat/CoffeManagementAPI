@@ -1,34 +1,91 @@
-﻿using CoffeeManagementAPI.DTOs.Product;
+﻿using CoffeeManagementAPI.Data;
+using CoffeeManagementAPI.DTOs.Product;
 using CoffeeManagementAPI.Interface;
+using CoffeeManagementAPI.Mappers.Prod;
 using CoffeeManagementAPI.Model;
+using CoffeeManagementAPI.QueryObject;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeManagementAPI.Repository
 {
     public class ProductRepository : IProductRepository
     {
-        public Task CreateNewProduct(Product newProduct)
+        ApplicaitonDBContext _context;
+        public ProductRepository(ApplicaitonDBContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public async Task<bool> CreateNewProduct(Product newProduct)
+        {
+            await _context.Products.AddAsync(newProduct);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public Task DeleteProduct(int id)
+        public async Task<bool> DeleteProduct(int id)
         {
-            throw new NotImplementedException();
+            var prod = await _context.Products.FirstOrDefaultAsync(p=> p.ProductID == id);
+            if(prod == null)
+            {
+                return false;
+            }
+
+            _context.Products.Remove(prod);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public Task<List<ProductDTO>> GetAllProduct()
+        public async Task<List<ProductDTO>> GetAllProduct()
         {
-            throw new NotImplementedException();
+            var prodList = await _context.Products.Select(p=> p.toProdDTO()).ToListAsync();
+
+            return prodList;
         }
 
-        public Task<ProductDTO> GetProductById(int id)
+        public async Task<List<ProductDTO>> GetProductByCategory(int categoryId)
         {
-            throw new NotImplementedException();
+            var prodlist = await _context.Products.Where(p=> p.CategoryId == categoryId).Select(s=> s.toProdDTO()).ToListAsync();
+
+            return prodlist;
         }
 
-        public Task UpdateProduct(Product newProduct, int id)
+        public async Task<ProductDTO?> GetProductById(int id)
         {
-            throw new NotImplementedException();
+            var prod = await _context.Products.FirstOrDefaultAsync(p=> p.ProductID == id);
+
+            if(prod == null)
+            {
+                return null;
+            }
+            return prod.toProdDTO();
+        }
+
+        public async Task<List<ProductDTO>> GetProductPagination(PaginationObject pagination)
+        {
+            var prodSelectable = _context.Products.Select(p => p.toProdDTO()).AsQueryable();
+
+            var prodList = await prodSelectable.Skip(pagination.page * pagination.pageSize).Take(pagination.pageSize).ToListAsync();
+
+            return prodList;
+        }
+
+        public async Task<bool> UpdateProduct(Product newProduct, int id)
+        {
+            var prod = await _context.Products.FirstOrDefaultAsync(p=> p.ProductID == id);
+
+            if(prod == null)
+            {
+                return false;
+            }
+
+            prod.Price = newProduct.Price;
+            prod.ProductID = newProduct.ProductID;
+            prod.ProductName = newProduct.ProductName;
+            prod.CategoryId = newProduct.CategoryId;
+            prod.IsSoldOut = newProduct.IsSoldOut;
+            await _context.SaveChangesAsync();
+            return true;
+
         }
     }
 }

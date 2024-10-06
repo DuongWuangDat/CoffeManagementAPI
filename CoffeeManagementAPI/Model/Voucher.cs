@@ -17,7 +17,7 @@ namespace CoffeeManagementAPI.Model
         public DateTime ExpiredDate { get; set; }
         public int MaxApply { get; set; }
 
-        public int VoucherTypeId { get; set; }
+        public int? VoucherTypeId { get; set; }
         public VoucherType? VoucherType { get; set; }
 
     }

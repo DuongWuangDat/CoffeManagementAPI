@@ -6,14 +6,14 @@ namespace CoffeeManagementAPI.Interface
     public interface IVoucherRepository
     {
 
-        Task CreateNewVoucher(Voucher newVoucher);
-        Task DeleteVoucher(int id);
+        Task<bool> CreateNewVoucher(Voucher newVoucher);
+        Task<bool> DeleteVoucher(int id);
 
-        Task UpdateVoucher(Voucher voucher, int id);
+        Task<bool> UpdateVoucher(Voucher voucher, int id);
 
         Task<List<VoucherDTO>> GetAllVoucher();
 
-        Task<VoucherDTO> GetVoucherById();
+        Task<VoucherDTO?> GetVoucherById(int id);
 
 
     }

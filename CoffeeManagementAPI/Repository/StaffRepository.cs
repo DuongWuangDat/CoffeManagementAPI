@@ -40,5 +40,7 @@ namespace CoffeeManagementAPI.Repository
                 await _context.Staff.AddAsync(staff);
                 await _context.SaveChangesAsync();
         }
+
+
     }
 }

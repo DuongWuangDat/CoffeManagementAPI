@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoffeeManagementAPI.Model
 {
-    public class Bill
+    public class Bill 
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -13,14 +15,16 @@ namespace CoffeeManagementAPI.Model
         [Column(TypeName = "decimal(18,2)")]
         public decimal TotalPrice { get; set; }
 
-        public int CustomerId { get; set; }
+        public DateTime DateTime { get; set; }
+
+        public int? CustomerId { get; set; }
         public Customer? Customer { get; set; }
 
-        public int VoucherId { get; set; }
+        public int? VoucherId { get; set; }
         public Voucher? Voucher { get; set; }
-        public int StaffId { get; set; }
+        public int? StaffId { get; set; }
         public Staff? Staff { get; set; }
-        public int PayTypeId { get; set; }
+        public int? PayTypeId { get; set; }
         public PayType? PayType { get; set; }
     }
 }
