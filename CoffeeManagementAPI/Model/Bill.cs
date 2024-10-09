@@ -22,6 +22,11 @@ namespace CoffeeManagementAPI.Model
 
         public int? VoucherId { get; set; }
         public Voucher? Voucher { get; set; }
+
+        [Column(TypeName ="decimal(18,2)")]
+        public decimal VoucherValue { get; set; }
+
+        public int VoucherTypeIndex { get; set; }
         public int? StaffId { get; set; }
         public Staff? Staff { get; set; }
         public int? PayTypeId { get; set; }

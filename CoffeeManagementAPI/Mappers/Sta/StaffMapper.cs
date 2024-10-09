@@ -15,6 +15,7 @@ namespace CoffeeManagementAPI.Mappers.Sta
                 Username = updatedStaffDTO.Username,
                 StaffName = updatedStaffDTO.StaffName,
             };
+        }
 
     }
 }

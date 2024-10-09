@@ -4,6 +4,7 @@ using CoffeeManagementAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoffeeManagementAPI.Migrations
 {
     [DbContext(typeof(ApplicaitonDBContext))]
-    partial class ApplicaitonDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241009094023_New")]
+    partial class New
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,12 +57,6 @@ namespace CoffeeManagementAPI.Migrations
                     b.Property<int?>("VoucherId")
                         .HasColumnType("int");
 
-                    b.Property<int>("VoucherTypeIndex")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("VoucherValue")
-                        .HasColumnType("decimal(18,2)");
-
                     b.HasKey("BillId");
 
                     b.HasIndex("CustomerId");
@@ -78,11 +75,8 @@ namespace CoffeeManagementAPI.Migrations
 
             modelBuilder.Entity("CoffeeManagementAPI.Model.BillDetail", b =>
                 {
-                    b.Property<int>("BillDetailId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BillDetailId"));
 
                     b.Property<int>("BillId")
                         .HasColumnType("int");
@@ -90,24 +84,12 @@ namespace CoffeeManagementAPI.Migrations
                     b.Property<int>("ProductCount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("ProductPrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<decimal>("TotalPriceDtail")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("BillDetailId");
+                    b.HasKey("ProductId", "BillId");
 
                     b.HasIndex("BillId");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("BillDetails");
                 });
@@ -372,22 +354,22 @@ namespace CoffeeManagementAPI.Migrations
                     b.HasOne("CoffeeManagementAPI.Model.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("CoffeeManagementAPI.Model.PayType", "PayType")
                         .WithMany()
                         .HasForeignKey("PayTypeId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("CoffeeManagementAPI.Model.Staff", "Staff")
                         .WithMany("Bills")
                         .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("CoffeeManagementAPI.Model.Voucher", "Voucher")
                         .WithMany()
                         .HasForeignKey("VoucherId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Customer");
 
@@ -403,13 +385,14 @@ namespace CoffeeManagementAPI.Migrations
                     b.HasOne("CoffeeManagementAPI.Model.Bill", "Bill")
                         .WithMany()
                         .HasForeignKey("BillId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CoffeeManagementAPI.Model.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Bill");
 
@@ -421,7 +404,7 @@ namespace CoffeeManagementAPI.Migrations
                     b.HasOne("CoffeeManagementAPI.Model.CustomerType", "CustomerType")
                         .WithMany("Customers")
                         .HasForeignKey("CustomerTypeId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("CustomerType");
                 });
@@ -431,7 +414,7 @@ namespace CoffeeManagementAPI.Migrations
                     b.HasOne("CoffeeManagementAPI.Model.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Category");
                 });
@@ -441,7 +424,7 @@ namespace CoffeeManagementAPI.Migrations
                     b.HasOne("CoffeeManagementAPI.Model.VoucherType", "VoucherType")
                         .WithMany()
                         .HasForeignKey("VoucherTypeId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("VoucherType");
                 });
