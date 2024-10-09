@@ -13,7 +13,9 @@ namespace CoffeeManagementAPI.DTOs.Bill
         public string Status { get; set; } = string.Empty;
         public decimal TotalPrice { get; set; }
         public CustomerDTO? Customer { get; set; }
-        public VoucherDTO? Voucher { get; set; }
+        public decimal VoucherValue { get; set; }
+
+        public int VoucherTypeIndex { get; set; }
         public StaffDTO? Staff { get; set; }
         public PayType? PayType { get; set; }
 
