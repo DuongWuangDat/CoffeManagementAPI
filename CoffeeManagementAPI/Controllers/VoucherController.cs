@@ -72,7 +72,7 @@ namespace CoffeeManagementAPI.Controllers
 
         }
 
-        [HttpDelete("delete/{id:id}")]
+        [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> DeleteVoucher([FromRoute] int id)
         {
             if (!ModelState.IsValid)
