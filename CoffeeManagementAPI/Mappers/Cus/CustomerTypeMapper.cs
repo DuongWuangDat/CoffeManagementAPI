@@ -13,6 +13,7 @@ namespace CoffeeManagementAPI.Mappers.Cus
                 BoundaryRevenue = customerType.BoundaryRevenue,
                 CustomerTypeID = customerType.CustomerTypeID,
                 CustomerTypeName = customerType.CustomerTypeName,
+                DiscountValue = customerType.DiscountValue,
             };
         }
     }

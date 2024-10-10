@@ -6,6 +6,8 @@ namespace CoffeeManagementAPI.DTOs.Customer
     {
         public int CustomerTypeID { get; set; }
         public string CustomerTypeName { get; set; } = string.Empty;
+
+        public decimal DiscountValue { get; set; }
         public decimal BoundaryRevenue { get; set; } = 0;
     }
 }

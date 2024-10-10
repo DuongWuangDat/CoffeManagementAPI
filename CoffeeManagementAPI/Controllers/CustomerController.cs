@@ -30,7 +30,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpGet("getbyid/{id:int}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById( [FromRoute] int id)
         {
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
@@ -52,6 +52,7 @@ namespace CoffeeManagementAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
+
 
             var newCus = createCustomerDTO.toCustomerFromCreated();
 

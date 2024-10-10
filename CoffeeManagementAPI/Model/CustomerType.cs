@@ -9,6 +9,10 @@ namespace CoffeeManagementAPI.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CustomerTypeID { get; set; }
         public string CustomerTypeName { get; set; } = string.Empty;
+        [Column(TypeName ="decimal(18,2)")]
+        public decimal DiscountValue { get; set; }
+
+
         [Column(TypeName = "decimal(18,2)")]
         public decimal BoundaryRevenue { get; set; } = 0;
 

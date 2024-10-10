@@ -32,7 +32,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpGet("getbyid/{id:int}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
             if(!ModelState.IsValid)
             {

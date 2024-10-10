@@ -30,7 +30,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpGet("delete/{id:int}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute]int id)
         {
             if(!ModelState.IsValid)
             {
@@ -47,7 +47,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpPut("update/{id:int}")]
-        public async Task<IActionResult> updateStaff([FromBody] UpdatedStaffDTO updatedStaffDTO, int id)
+        public async Task<IActionResult> updateStaff([FromBody] UpdatedStaffDTO updatedStaffDTO,[FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {

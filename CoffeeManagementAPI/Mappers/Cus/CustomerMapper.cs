@@ -25,7 +25,7 @@ namespace CoffeeManagementAPI.Mappers.Cus
                 CustomerName = createCustomerDTO.CustomerName,
                 PhoneNumber = createCustomerDTO.PhoneNumber,
                 CustomerTypeId = createCustomerDTO.CustomerTypeId,
-                Revenue = createCustomerDTO.Revenue,
+                Revenue = createCustomerDTO.Revenue
             };
         }
 

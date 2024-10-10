@@ -10,8 +10,8 @@ namespace CoffeeManagementAPI.DTOs.Customer
         [Required]
         [MinLength(8, ErrorMessage ="PhoneNumber must be 8 characters")]
         public string PhoneNumber { get; set; } = string.Empty;
-        [Required]
-        public decimal Revenue { get; set; }
+
+        public decimal Revenue { get; set; } = 0;
         [Required]
         public int? CustomerTypeId { get; set; }
 
