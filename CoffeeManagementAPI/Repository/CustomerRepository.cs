@@ -35,29 +35,27 @@ namespace CoffeeManagementAPI.Repository
 
         public async Task<List<CustomerDTO>> GetAllCustomer()
         {
-            var cusList = await _context.Customers.Select(p=> p.toCustomerDTO()).ToListAsync();
+            var cusList = await _context.Customers.Include(c=> c.CustomerType).Select(p=> p.toCustomerDTO()).ToListAsync();
             return cusList;
         }
 
         public async Task<CustomerDTO?> GetCustomerById(int id)
         {
-            var cus = await _context.Customers.FirstOrDefaultAsync(p=> p.CustomerID==id);
+            var cus = await _context.Customers.Include(c=>c.CustomerType).FirstOrDefaultAsync(p=> p.CustomerID==id);
             if (cus == null) { return null; }
             return cus.toCustomerDTO();
         }
 
-        public async Task<bool> UpadateCustomer(Customer customer, int id)
+        public async Task<(bool,Customer?)> UpadateCustomer(Customer customer, int id)
         {
             var cus = await _context.Customers.FirstOrDefaultAsync(p=> p.CustomerID==id);
 
-            if(cus == null) { return false; }
+            if(cus == null) { return (false,null); }
 
             cus.PhoneNumber = customer.PhoneNumber;
             cus.CustomerName = customer.CustomerName;
-            cus.Revenue = customer.Revenue;
-            cus.CustomerTypeId = customer.CustomerTypeId;
             await _context.SaveChangesAsync();
-            return true;
+            return (true,cus);
         } 
     }
 }

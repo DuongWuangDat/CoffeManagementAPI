@@ -29,7 +29,7 @@ namespace CoffeeManagementAPI.Controllers
             return Ok(staffs);
         }
 
-        [HttpGet("delete/{id:int}")]
+        [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete([FromRoute]int id)
         {
             if(!ModelState.IsValid)
@@ -56,7 +56,7 @@ namespace CoffeeManagementAPI.Controllers
 
             var newStaff = updatedStaffDTO.toStaffFromUpdate();
 
-            var isSuccess = await _staffRepository.UpdateStaff(newStaff, id);
+            var (isSuccess,staff) = await _staffRepository.UpdateStaff(newStaff, id);
 
             if (!isSuccess)
             {
@@ -65,7 +65,7 @@ namespace CoffeeManagementAPI.Controllers
 
             return Ok(new
             {
-                data= newStaff,
+                data= staff,
                 message= "Updated successfully"
             });
 

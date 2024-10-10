@@ -60,18 +60,18 @@ namespace CoffeeManagementAPI.Repository
                 await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateStaff(Staff staff, int i)
+        public async Task<(bool,Staff?)> UpdateStaff(Staff staff, int i)
         {
             var staffF = await _context.Staff.FirstOrDefaultAsync(s => s.StaffId == i);
             if (staffF == null)
             {
-                return false;
+                return (false,null);
             }
             staffF.StaffName = staff.StaffName;
             staffF.Username = staff.Username;
             await _context.SaveChangesAsync();
 
-            return true;
+            return (true, staffF);
 
         }
     }

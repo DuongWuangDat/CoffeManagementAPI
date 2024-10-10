@@ -69,5 +69,48 @@ namespace CoffeeManagementAPI.Controllers
             }) ;
         }
 
+        [HttpDelete("delete/{id:int}")]
+        public async Task<IActionResult> DeleteById ([FromRoute] int id)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var isSuccess = await _customerRepository.DeleteCustomer(id);
+
+            if (!isSuccess)
+            {
+                return NotFound("Customer is not found");
+            }
+
+            return Ok(new
+            {
+                message = "Deleted successfully"
+            });
+        }
+
+        [HttpPut("update/{id:int}")]
+        public async Task<IActionResult> UpdateById([FromRoute] int id, [FromBody] UpdateCustomerDTO updateCustomerDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var (isSuccess, newCus) = await _customerRepository.UpadateCustomer(updateCustomerDTO.toCustomerFromUpdated(), id);
+
+            if (!isSuccess)
+            {
+                return NotFound("Customer is not found");
+            }
+
+            return Ok(new
+            {
+                data = newCus,
+                message = "Updated successfully"
+            });
+        }
+
     }
 }

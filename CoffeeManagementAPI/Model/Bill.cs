@@ -31,5 +31,8 @@ namespace CoffeeManagementAPI.Model
         public Staff? Staff { get; set; }
         public int? PayTypeId { get; set; }
         public PayType? PayType { get; set; }
+
+        public List<BillDetail> BillDetails { get; set; } = new List<BillDetail>();
+
     }
 }

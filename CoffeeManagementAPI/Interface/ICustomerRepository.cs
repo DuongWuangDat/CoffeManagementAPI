@@ -10,7 +10,7 @@ namespace CoffeeManagementAPI.Interface
 
         Task<bool> DeleteCustomer(int i);
 
-        Task<bool> UpadateCustomer(Customer customer, int id);
+        Task<(bool, Customer?)> UpadateCustomer(Customer customer, int id);
 
         Task<List<CustomerDTO>> GetAllCustomer();
 

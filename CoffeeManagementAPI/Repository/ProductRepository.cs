@@ -37,14 +37,14 @@ namespace CoffeeManagementAPI.Repository
 
         public async Task<List<ProductDTO>> GetAllProduct()
         {
-            var prodList = await _context.Products.Select(p=> p.toProdDTO()).ToListAsync();
+            var prodList = await _context.Products.Include(p=> p.Category).Select(p=> p.toProdDTO()).ToListAsync();
 
             return prodList;
         }
 
         public async Task<List<ProductDTO>> GetProductByCategory(int categoryId)
         {
-            var prodlist = await _context.Products.Where(p=> p.CategoryId == categoryId).Select(s=> s.toProdDTO()).ToListAsync();
+            var prodlist = await _context.Products.Include(p=> p.Category).Where(p=> p.CategoryId == categoryId).Select(s=> s.toProdDTO()).ToListAsync();
 
             return prodlist;
         }
@@ -69,13 +69,13 @@ namespace CoffeeManagementAPI.Repository
             return prodList;
         }
 
-        public async Task<bool> UpdateProduct(Product newProduct, int id)
+        public async Task<(bool,Product?)> UpdateProduct(Product newProduct, int id)
         {
             var prod = await _context.Products.FirstOrDefaultAsync(p=> p.ProductID == id);
 
             if(prod == null)
             {
-                return false;
+                return (false, null);
             }
 
             prod.Price = newProduct.Price;
@@ -83,7 +83,7 @@ namespace CoffeeManagementAPI.Repository
             prod.CategoryId = newProduct.CategoryId;
             prod.IsSoldOut = newProduct.IsSoldOut;
             await _context.SaveChangesAsync();
-            return true;
+            return (true,prod);
 
         }
     }

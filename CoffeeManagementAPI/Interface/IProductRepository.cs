@@ -9,7 +9,7 @@ namespace CoffeeManagementAPI.Interface
 
         Task<bool> CreateNewProduct(Product newProduct);
 
-        Task<bool> UpdateProduct(Product newProduct, int id);
+        Task<(bool,Product?)> UpdateProduct(Product newProduct, int id);
 
         Task<bool> DeleteProduct(int id);
 

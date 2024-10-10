@@ -3,6 +3,7 @@ using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Mappers.VoucherMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace CoffeeManagementAPI.Controllers
 {
@@ -87,6 +88,30 @@ namespace CoffeeManagementAPI.Controllers
                 return NotFound("Voucher is not found");
             }
             return Ok("Deleted voucher successfully");
+        }
+
+        [HttpPut("update/{id:int}")]
+        public async Task<IActionResult> UpdateVoucher([FromRoute] int id, [FromBody] UpdatedVoucherDTO updatedVoucherDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var (isSuccess, newVoucher) = await _voucherRepository.UpdateVoucher(updatedVoucherDTO.toVoucherFromUpdated(), id);
+
+            if (!isSuccess)
+            {
+                return BadRequest("Something went wrong");
+            }
+
+            return Ok(new
+            {
+                data = newVoucher,
+                message ="Updated successfully"
+            });
+
+
         }
 
     }

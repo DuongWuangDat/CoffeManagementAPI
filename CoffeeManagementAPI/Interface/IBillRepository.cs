@@ -1,4 +1,5 @@
-﻿using CoffeeManagementAPI.Model;
+﻿using CoffeeManagementAPI.DTOs.Bill;
+using CoffeeManagementAPI.Model;
 
 namespace CoffeeManagementAPI.Interface
 {
@@ -9,9 +10,9 @@ namespace CoffeeManagementAPI.Interface
 
         Task DeleteBill(int id);
 
-        Task<Bill> GetBillById(int id);
+        Task<List<BillFromGetAllDTO>> GetBillById(int id);
 
-        Task<Bill> GetAllBill();
+        Task<BillDTO?> GetAllBill();
 
     }
 }

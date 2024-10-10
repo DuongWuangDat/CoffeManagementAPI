@@ -38,14 +38,14 @@ namespace CoffeeManagementAPI.Repository
 
         public async Task<List<VoucherDTO>> GetAllVoucher()
         {
-            var voucherList = await _context.Vouchers.Select(s => s.toVoucherDTO()).ToListAsync();
+            var voucherList = await _context.Vouchers.Include(v => v.VoucherType).Select(s => s.toVoucherDTO()).ToListAsync();
 
             return voucherList;
         }
 
         public async Task<VoucherDTO?> GetVoucherById(int id)
         {
-            var voucher = await _context.Vouchers.FirstOrDefaultAsync(v => v.VoucherID == id);
+            var voucher = await _context.Vouchers.Include(v => v.VoucherType).FirstOrDefaultAsync(v => v.VoucherID == id);
 
             if(voucher == null)
             {
@@ -55,9 +55,29 @@ namespace CoffeeManagementAPI.Repository
             return voucher.toVoucherDTO();
         }
 
-        public Task<bool> UpdateVoucher(Voucher voucher, int id)
+        public async Task<(bool,Voucher?)> UpdateVoucher(Voucher voucher, int id)
         {
-            throw new NotImplementedException();
+            var vouch = await _context.Vouchers.FirstOrDefaultAsync(p=> p.VoucherID ==  id);
+            if (vouch == null)
+            {
+                return (false, null);
+            }
+            if(vouch.CreatedDate > voucher.ExpiredDate)
+            {
+                return (false, null);
+            }
+
+            vouch.ExpiredDate = voucher.ExpiredDate;
+            vouch.VoucherValue = voucher.VoucherValue;
+            vouch.VoucherCode = voucher.VoucherCode;
+            vouch.VoucherTypeId = voucher.VoucherTypeId;
+            vouch.MaxApply = voucher.MaxApply;
+
+            await _context.SaveChangesAsync();
+
+            return (true, vouch);
+           
+            
         }
     }
 }

@@ -28,9 +28,20 @@ namespace CoffeeManagementAPI.Mappers.VoucherMapper
                 ExpiredDate = voucher.ExpiredDate,
                 MaxApply = voucher.MaxApply,
                 VoucherCode = voucher.VoucherCode,
-                VoucherID = voucher.VoucherID,
                 VoucherTypeId = voucher.VoucherTypeId,
                 VoucherValue = voucher.VoucherValue,
+            };
+        }
+
+        public static Voucher toVoucherFromUpdated (this UpdatedVoucherDTO updatedVoucherDTO)
+        {
+            return new()
+            {
+                ExpiredDate = updatedVoucherDTO.ExpiredDate,
+                MaxApply = updatedVoucherDTO.MaxApply,
+                VoucherCode = updatedVoucherDTO.VoucherCode,
+                VoucherTypeId= updatedVoucherDTO.VoucherTypeId,
+                VoucherValue= updatedVoucherDTO.VoucherValue,
             };
         }
     }

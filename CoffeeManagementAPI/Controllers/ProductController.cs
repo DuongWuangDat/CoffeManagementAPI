@@ -78,16 +78,20 @@ namespace CoffeeManagementAPI.Controllers
                 return BadRequest(ModelState);
             }
             var newProduct = newProductDTO.toProductFromCreate();
-            var isSuccess =await _productRepository.UpdateProduct(newProduct, id);
+            var (isSuccess,product) =await _productRepository.UpdateProduct(newProduct, id);
 
             if (!isSuccess)
             {
                 return BadRequest("Something went wrong");
             }
-            return CreatedAtAction(nameof(GetProductById), new { id }, newProduct.toProdDTO());
+            return Ok(new
+            {
+                data=product,
+                message="Updated successfully"
+            });
         }
 
-        [HttpPut("delete/{id:int}")]
+        [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
             if (!ModelState.IsValid)

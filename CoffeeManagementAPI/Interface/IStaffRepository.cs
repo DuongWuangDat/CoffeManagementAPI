@@ -11,7 +11,7 @@ namespace CoffeeManagementAPI.Interface
 
         Task<List<StaffDTO>> GetAllStaff();
 
-        Task<bool> UpdateStaff(Staff staff, int i);
+        Task<(bool,Staff?)> UpdateStaff(Staff staff, int i);
 
         Task<bool> DeleteStaff(int i);
 
