@@ -14,7 +14,8 @@ namespace CoffeeManagementAPI.Mappers.Prod
                 ProductName = product.ProductName,
                 IsSoldOut = product.IsSoldOut,
                 Price = product.Price,
-                ProductID = product.ProductID
+                ProductID = product.ProductID,
+                Image = product.Image
             };
         }
 
@@ -26,6 +27,7 @@ namespace CoffeeManagementAPI.Mappers.Prod
                 ProductName = createProductDTO.ProductName,
                 IsSoldOut = createProductDTO.IsSoldOut,
                 Price = createProductDTO.Price,
+                Image = createProductDTO.Image
 
             };
 

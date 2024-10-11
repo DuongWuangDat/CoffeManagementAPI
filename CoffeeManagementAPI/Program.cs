@@ -97,7 +97,8 @@ builder.Services.AddScoped<IBillRepository, BillRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IPayTypeRepository, PayTypeRepository>();
-
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+builder.Services.AddScoped<ISendMailService, SendEmailService>();
 
 
 var app = builder.Build();
@@ -135,6 +136,11 @@ else
 
 
 app.UseHttpsRedirection();
+
+app.UseCors(x =>
+    x.AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowAnyOrigin());
 
 app.MapControllers();
 

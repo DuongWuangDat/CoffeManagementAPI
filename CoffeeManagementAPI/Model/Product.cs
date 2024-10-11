@@ -11,7 +11,7 @@ namespace CoffeeManagementAPI.Model
         public string ProductName { get; set; } =string.Empty;
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; } = 0;
-
+        public string Image { get; set; } = string.Empty;
         public bool IsSoldOut { get; set; } = false;
         public int? CategoryId { get; set; }
         public Category Category { get; set; } = new Category();
