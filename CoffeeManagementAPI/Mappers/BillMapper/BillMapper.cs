@@ -36,5 +36,21 @@ namespace CoffeeManagementAPI.Mappers.BillMapper
                 TotalPrice = bill.TotalPrice,
             };
         }
+
+        public static Bill toBillFromUpdated (this CreatedBillDTO createdBillDTO)
+        {
+            return new()
+            {
+                BillDetails = createdBillDTO.BillDetails.Select(b=> b.toBillDetailFromCreated()).ToList(),
+                CustomerId = createdBillDTO.CustomerId,
+                PayTypeId = createdBillDTO.PayTypeId,
+                DateTime = DateTime.Now,
+                StaffId = createdBillDTO.StaffId,
+                Status = createdBillDTO.Status,
+                VoucherId = createdBillDTO.VoucherId,
+                TotalPrice = createdBillDTO.TotalPrice
+            };
+        }
+
     }
 }

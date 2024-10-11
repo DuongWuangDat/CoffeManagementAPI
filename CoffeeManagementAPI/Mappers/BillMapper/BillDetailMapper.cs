@@ -17,5 +17,18 @@ namespace CoffeeManagementAPI.Mappers.BillMapper
             };
         }
 
+        public static BillDetail toBillDetailFromCreated (this CreateBillDetailDTO createBillDetailDTO)
+        {
+            return new BillDetail()
+            {
+                ProductCount = createBillDetailDTO.ProductCount,
+                ProductId = createBillDetailDTO.ProductId,
+                ProductName= createBillDetailDTO.ProductName,
+                ProductPrice= createBillDetailDTO.ProductPrice,
+                TotalPriceDtail = createBillDetailDTO.TotalPriceDtail
+            };
+        }
+
+
     }
 }

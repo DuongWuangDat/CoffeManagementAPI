@@ -6,13 +6,13 @@ namespace CoffeeManagementAPI.Interface
     public interface IBillRepository
     {
 
-        Task CreateNewBill(Bill bill);
+        Task<bool> CreateNewBill(Bill bill);
 
         Task DeleteBill(int id);
 
-        Task<List<BillFromGetAllDTO>> GetBillById(int id);
+        Task<BillDTO?> GetBillById(int id);
 
-        Task<BillDTO?> GetAllBill();
+        Task<List<BillFromGetAllDTO>> GetAllBill();
 
     }
 }

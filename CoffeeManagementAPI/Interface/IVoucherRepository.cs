@@ -16,5 +16,7 @@ namespace CoffeeManagementAPI.Interface
         Task<VoucherDTO?> GetVoucherById(int id);
 
 
+        Task<VoucherDTO?> GetVoucherByCode(string code);
+
     }
 }

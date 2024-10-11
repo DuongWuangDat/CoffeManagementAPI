@@ -14,9 +14,44 @@ namespace CoffeeManagementAPI.Repository
         {
              _context = context;
         }
-        public Task CreateNewBill(Bill bill)
+        public async Task<bool> CreateNewBill(Bill bill)
         {
-            throw new NotImplementedException();
+            var voucher = await _context.Vouchers.FirstOrDefaultAsync(v => v.VoucherID == bill.VoucherId);
+
+            if (voucher == null)
+            {
+                return false;
+            }
+
+            bill.VoucherValue = voucher.VoucherValue;
+            bill.VoucherTypeIndex = (int)voucher.VoucherTypeId;
+
+            var cusID = bill.CustomerId;
+
+            if(cusID != null)
+            {
+                var cus = await _context.Customers.FirstOrDefaultAsync(c => c.CustomerID == cusID);
+
+                if(cus == null)
+                {
+                    return false;
+                }
+
+                cus.Revenue += bill.TotalPrice;
+
+                var customerType = await _context.CustomerTypes.OrderByDescending(c => c.BoundaryRevenue).FirstOrDefaultAsync(c => c.BoundaryRevenue <= cus.Revenue);
+
+                if(customerType != null)
+                {
+                    cus.CustomerTypeId = customerType.CustomerTypeID;
+                }
+            }
+
+            await _context.AddAsync(bill);
+            await _context.SaveChangesAsync();
+
+            return true;
+
         }
 
         public Task DeleteBill(int id)

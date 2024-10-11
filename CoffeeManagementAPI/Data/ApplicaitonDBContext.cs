@@ -28,7 +28,7 @@ namespace CoffeeManagementAPI.Data
             modelBuilder.Entity<CustomerType>().HasIndex(p => p.BoundaryRevenue).IsUnique();
             modelBuilder.Entity<Staff>().HasIndex(p=> p.Username).IsUnique();
             modelBuilder.Entity<Bill>().Property(p => p.Status).HasDefaultValue("Chưa thanh toán");
-            modelBuilder.Entity<Bill>().ToTable(t=> t.HasCheckConstraint("CK_STATUS_BILL", "[Status] IN ('Đã thanh toán', 'Chưa thanh toán')"));
+            modelBuilder.Entity<Bill>().ToTable(t=> t.HasCheckConstraint("CK_STATUS_BILL", "[Status] IN ('Đang chờ phục vụ', 'Đã hoàn thành')"));
             modelBuilder.Entity<Voucher>().ToTable(t => t.HasCheckConstraint("CK_VOUCHER_DATE", "[CreatedDate] < [ExpiredDate]"));
 
 

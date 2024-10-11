@@ -43,6 +43,17 @@ namespace CoffeeManagementAPI.Repository
             return voucherList;
         }
 
+        public async Task<VoucherDTO?> GetVoucherByCode(string code)
+        {
+            var voucher = await _context.Vouchers.FirstOrDefaultAsync(v=> v.VoucherCode == code);
+
+            if (voucher == null)
+            {
+                return null;
+            }
+            return voucher.toVoucherDTO();
+        }
+
         public async Task<VoucherDTO?> GetVoucherById(int id)
         {
             var voucher = await _context.Vouchers.Include(v => v.VoucherType).FirstOrDefaultAsync(v => v.VoucherID == id);

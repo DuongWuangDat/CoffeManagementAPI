@@ -50,6 +50,22 @@ namespace CoffeeManagementAPI.Controllers
             return Ok(voucher);
         }
 
+        [HttpGet("getbycode")]
+        public async Task<IActionResult> GetByCode([FromQuery] string code)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var voucher = await _voucherRepository.GetVoucherByCode(code);
+            if(voucher == null)
+            {
+                return NotFound("Voucher is not found");
+            }
+            return Ok(voucher);
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> CreateOne([FromBody] CreatedVoucherDTO createdVoucher)
         {
