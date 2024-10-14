@@ -1,5 +1,6 @@
 ﻿using CoffeeManagementAPI.DTOs.Customer;
 using CoffeeManagementAPI.Model;
+using CoffeeManagementAPI.QueryObject;
 
 namespace CoffeeManagementAPI.Interface
 {
@@ -15,6 +16,8 @@ namespace CoffeeManagementAPI.Interface
         Task<List<CustomerDTO>> GetAllCustomer();
 
         Task<CustomerDTO?> GetCustomerById(int id);
+
+        Task<List<CustomerDTO>> GetCustomerPagination(PaginationObject pagination);
 
     }
 }

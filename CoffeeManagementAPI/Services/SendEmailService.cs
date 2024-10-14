@@ -44,7 +44,7 @@ namespace CoffeeManagementAPI.Services
                 body = str.ReadToEnd();
             }
 
-            
+            body = body.Replace("{code}", code);
 
             return body;
         }

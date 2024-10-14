@@ -3,6 +3,7 @@ using CoffeeManagementAPI.DTOs.Staff;
 using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Mappers.Auth;
 using CoffeeManagementAPI.Model;
+using CoffeeManagementAPI.QueryObject;
 using CoffeeManagementAPI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +52,11 @@ namespace CoffeeManagementAPI.Repository
             var staffList = await _context.Staff.Select(s=> s.toStaffDTO()).ToListAsync();
 
             return staffList;
+        }
+
+        public Task<List<StaffDTO>> GetStaffPagination(PaginationObject pagination)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task RegisterStaff(Staff staff)

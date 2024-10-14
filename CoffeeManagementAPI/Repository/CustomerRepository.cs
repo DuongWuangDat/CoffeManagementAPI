@@ -3,6 +3,7 @@ using CoffeeManagementAPI.DTOs.Customer;
 using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Mappers.Cus;
 using CoffeeManagementAPI.Model;
+using CoffeeManagementAPI.QueryObject;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeManagementAPI.Repository
@@ -44,6 +45,11 @@ namespace CoffeeManagementAPI.Repository
             var cus = await _context.Customers.Include(c=>c.CustomerType).FirstOrDefaultAsync(p=> p.CustomerID==id);
             if (cus == null) { return null; }
             return cus.toCustomerDTO();
+        }
+
+        public Task<List<CustomerDTO>> GetCustomerPagination(PaginationObject pagination)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<(bool,Customer?)> UpadateCustomer(Customer customer, int id)

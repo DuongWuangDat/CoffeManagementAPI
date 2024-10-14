@@ -1,5 +1,6 @@
 ﻿using CoffeeManagementAPI.DTOs.Staff;
 using CoffeeManagementAPI.Model;
+using CoffeeManagementAPI.QueryObject;
 
 namespace CoffeeManagementAPI.Interface
 {
@@ -14,6 +15,8 @@ namespace CoffeeManagementAPI.Interface
         Task<(bool,Staff?)> UpdateStaff(Staff staff, int i);
 
         Task<bool> DeleteStaff(int i);
+
+        Task<List<StaffDTO>> GetStaffPagination(PaginationObject pagination);
 
 
 

@@ -6,6 +6,7 @@ namespace CoffeeManagementAPI.Controllers
 {
     [ApiController]
     [Route("/api/v1/upload")]
+    [Authorize]
     public class UploadController : ControllerBase
     {
 

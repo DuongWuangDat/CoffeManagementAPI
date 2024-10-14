@@ -13,6 +13,8 @@ namespace CoffeeManagementAPI.Model
         [Column(TypeName = "decimal(18,2)")]
         public decimal Revenue { get; set; }
 
+        public string Email { get; set; } = string.Empty;
+
         public int? CustomerTypeId { get; set; }
 
         public CustomerType? CustomerType { get; set; }
