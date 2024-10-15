@@ -3,6 +3,7 @@ using CoffeeManagementAPI.DTOs.Bill;
 using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Mappers.BillMapper;
 using CoffeeManagementAPI.Model;
+using CoffeeManagementAPI.QueryObject;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeManagementAPI.Repository
@@ -75,6 +76,14 @@ namespace CoffeeManagementAPI.Repository
             }
 
             return bill.toBillDTO();
+        }
+
+        public async Task<List<BillFromGetAllDTO>> GetBillPagination(PaginationObject pagination)
+        {
+            var billSelectable = _context.Bills.Select(b => b.toBillFromGetAllDTO()).AsQueryable();
+            var billList = await billSelectable.Skip(pagination.pageSize* (pagination.page-1)).Take(pagination.pageSize).ToListAsync();
+
+            return billList;
         }
     }
 }

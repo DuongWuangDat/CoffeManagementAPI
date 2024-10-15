@@ -19,10 +19,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpGet("getrevenue")]
         public async Task<IActionResult> GetRevenue([FromQuery] ReportRevenueInput report)
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             var revenue = await _reportService.GetRevenue(report.start, report.end);
 
             if(revenue == null)
@@ -36,10 +32,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpGet("getrevenuebydate/{date:datetime}")]
         public async Task<IActionResult> GetRevenueByDate([FromRoute] DateTime date)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var revenueRecord = await _reportService.GetRevenueByDate(date);
 
@@ -50,10 +42,6 @@ namespace CoffeeManagementAPI.Controllers
 
         public async Task<IActionResult> GetProductReport([FromQuery] ReportRevenueInput reportRevenueInput)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var productReport = await _reportService.GetProductRevenue(reportRevenueInput.start, reportRevenueInput.end);
 
@@ -64,11 +52,6 @@ namespace CoffeeManagementAPI.Controllers
         public async Task<IActionResult> GetOrderTotal([FromQuery] ReportRevenueInput reportRevenueInput)
         {
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var totalOrder = await _reportService.GetTotalOrder(reportRevenueInput.start, reportRevenueInput.end);
 
             return Ok(totalOrder);
@@ -78,10 +61,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpGet("getreportbill")]
         public async Task<IActionResult> GetReportBill([FromQuery] ReportRevenueInput reportRevenueInput)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var reportBill = await _reportService.GetReportBill(reportRevenueInput.start, reportRevenueInput.end);
 

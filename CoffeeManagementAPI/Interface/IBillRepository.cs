@@ -1,5 +1,6 @@
 ﻿using CoffeeManagementAPI.DTOs.Bill;
 using CoffeeManagementAPI.Model;
+using CoffeeManagementAPI.QueryObject;
 
 namespace CoffeeManagementAPI.Interface
 {
@@ -13,6 +14,8 @@ namespace CoffeeManagementAPI.Interface
         Task<BillDTO?> GetBillById(int id);
 
         Task<List<BillFromGetAllDTO>> GetAllBill();
+
+        Task<List<BillFromGetAllDTO>> GetBillPagination(PaginationObject pagination);
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CoffeeManagementAPI.DTOs.Staff;
 using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Mappers.Sta;
+using CoffeeManagementAPI.QueryObject;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,10 +20,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpGet("getall")]
         public async Task<IActionResult> GetAll()
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var staffs = await _staffRepository.GetAllStaff();
 
@@ -32,10 +29,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete([FromRoute]int id)
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var isSuccess = await _staffRepository.DeleteStaff(id);
             if(!isSuccess)
@@ -49,10 +42,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpPut("update/{id:int}")]
         public async Task<IActionResult> updateStaff([FromBody] UpdatedStaffDTO updatedStaffDTO,[FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var newStaff = updatedStaffDTO.toStaffFromUpdate();
 
@@ -71,6 +60,23 @@ namespace CoffeeManagementAPI.Controllers
 
 
         }
+
+        [HttpGet("paginate")]
+        public async Task<IActionResult> Paginate([FromQuery] PaginationObject pagination)
+        {
+          
+
+            var staffList = await _staffRepository.GetStaffPagination(pagination);
+
+            return Ok(new
+            {
+                page = pagination.page,
+                pageSize = pagination.pageSize,
+                data = staffList
+            });
+
+        }
+
 
     }
 }

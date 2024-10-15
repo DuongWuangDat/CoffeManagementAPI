@@ -54,9 +54,13 @@ namespace CoffeeManagementAPI.Repository
             return staffList;
         }
 
-        public Task<List<StaffDTO>> GetStaffPagination(PaginationObject pagination)
+        public async Task<List<StaffDTO>> GetStaffPagination(PaginationObject pagination)
         {
-            throw new NotImplementedException();
+            var staffSelectable = _context.Staff.Select(s => s.toStaffDTO()).AsQueryable();
+
+            var staffList = await staffSelectable.Skip(pagination.pageSize * (pagination.page -1)).Take(pagination.pageSize).ToListAsync();
+
+            return staffList;
         }
 
         public async Task RegisterStaff(Staff staff)

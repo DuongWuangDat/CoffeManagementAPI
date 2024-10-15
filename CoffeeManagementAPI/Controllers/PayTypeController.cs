@@ -19,10 +19,6 @@ namespace CoffeeManagementAPI.Controllers
 
         [HttpGet("getall")]
         public async Task<IActionResult> GetAll() { 
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var payTyps = await _paytypeRepository.GetAll();
             return Ok(payTyps);

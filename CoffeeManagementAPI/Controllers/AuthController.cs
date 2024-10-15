@@ -26,10 +26,6 @@ namespace CoffeeManagementAPI.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterStaffDTO registerStaffDTO)
         {
 
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             Staff newStaff = registerStaffDTO.toStaffFromRegister();
             await _staffRepository.RegisterStaff(newStaff);
             var accessToken = _tokenService.GenerateAccessToken(newStaff);

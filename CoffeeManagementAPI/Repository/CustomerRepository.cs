@@ -47,9 +47,25 @@ namespace CoffeeManagementAPI.Repository
             return cus.toCustomerDTO();
         }
 
-        public Task<List<CustomerDTO>> GetCustomerPagination(PaginationObject pagination)
+        public async Task<CustomerDTO?> GetCustomerByPhonenumber(string phonenumber)
         {
-            throw new NotImplementedException();
+            var cus = await _context.Customers.Where(c=> c.PhoneNumber == phonenumber).FirstOrDefaultAsync();
+
+            if(cus == null)
+            {
+                return null;
+            }
+
+            return cus.toCustomerDTO();
+        }
+
+        public async Task<List<CustomerDTO>> GetCustomerPagination(PaginationObject pagination)
+        {
+            var cusSelectable = _context.Customers.Select(c=> c.toCustomerDTO()).AsQueryable();
+
+            var cusList = await cusSelectable.Skip(pagination.pageSize * (pagination.page-1)).Take(pagination.pageSize).ToListAsync();
+
+            return cusList;
         }
 
         public async Task<(bool,Customer?)> UpadateCustomer(Customer customer, int id)

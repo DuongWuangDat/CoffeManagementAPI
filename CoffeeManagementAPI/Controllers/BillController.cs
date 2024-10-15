@@ -1,6 +1,7 @@
 ﻿using CoffeeManagementAPI.DTOs.Bill;
 using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Mappers.BillMapper;
+using CoffeeManagementAPI.QueryObject;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,10 +24,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpGet("getall")]
         public async Task<IActionResult> GetAll()
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var billList = await _billRepository.GetAllBill();
 
@@ -36,10 +33,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpGet("getbyid/{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var bill = await _billRepository.GetBillById(id);
 
@@ -50,10 +43,6 @@ namespace CoffeeManagementAPI.Controllers
         [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Create([FromBody] CreatedBillDTO createdBillDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             var bill = createdBillDTO.toBillFromUpdated();
             var isSuccess = await _billRepository.CreateNewBill(bill);
             if (!isSuccess)
@@ -65,6 +54,19 @@ namespace CoffeeManagementAPI.Controllers
             {
                 data = bill,
                 message = "Created successfully"
+            });
+        }
+
+        [HttpGet("paginate")]
+        public async Task<IActionResult> GetBillPaginate([FromQuery] PaginationObject pagination)
+        {
+            var billList = await _billRepository.GetBillPagination(pagination);
+
+            return Ok(new
+            {
+                page= pagination.page,
+                pageSize = pagination.pageSize,
+                data = billList
             });
         }
 

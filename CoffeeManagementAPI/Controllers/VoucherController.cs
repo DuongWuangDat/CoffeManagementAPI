@@ -23,9 +23,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpGet("getall")]
         public async Task<IActionResult> GetAll() 
         { 
-            if(!ModelState.IsValid) { 
-                return BadRequest(ModelState);
-            }
 
             var voucherList = await _voucherRepository.GetAllVoucher();
 
@@ -35,11 +32,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpGet("getbyid/{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var voucher = await _voucherRepository.GetVoucherById(id);
 
             if(voucher == null)
@@ -53,10 +45,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpGet("getbycode")]
         public async Task<IActionResult> GetByCode([FromQuery] string code)
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var voucher = await _voucherRepository.GetVoucherByCode(code);
             if(voucher == null)
@@ -69,10 +57,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateOne([FromBody] CreatedVoucherDTO createdVoucher)
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             if (!createdVoucher.IsValidation())
             {
@@ -92,10 +76,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> DeleteVoucher([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var isSucess = await _voucherRepository.DeleteVoucher(id);
 
@@ -109,10 +89,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpPut("update/{id:int}")]
         public async Task<IActionResult> UpdateVoucher([FromRoute] int id, [FromBody] UpdatedVoucherDTO updatedVoucherDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var (isSuccess, newVoucher) = await _voucherRepository.UpdateVoucher(updatedVoucherDTO.toVoucherFromUpdated(), id);
 

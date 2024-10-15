@@ -1,6 +1,7 @@
 ﻿using CoffeeManagementAPI.DTOs.Customer;
 using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Mappers.Cus;
+using CoffeeManagementAPI.QueryObject;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,10 +21,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpGet("getall")]
         public async Task<IActionResult> GetAll()
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var cusList = await _customerRepository.GetAllCustomer();
             return Ok(cusList);
@@ -32,9 +29,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpGet("getbyid/{id:int}")]
         public async Task<IActionResult> GetById( [FromRoute] int id)
         {
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            }
 
             var cus = await _customerRepository.GetCustomerById(id);
             if (cus == null)
@@ -48,10 +42,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] CreateCustomerDTO createCustomerDTO)
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
 
             var newCus = createCustomerDTO.toCustomerFromCreated();
@@ -72,10 +62,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> DeleteById ([FromRoute] int id)
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var isSuccess = await _customerRepository.DeleteCustomer(id);
 
@@ -93,11 +79,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpPut("update/{id:int}")]
         public async Task<IActionResult> UpdateById([FromRoute] int id, [FromBody] UpdateCustomerDTO updateCustomerDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var (isSuccess, newCus) = await _customerRepository.UpadateCustomer(updateCustomerDTO.toCustomerFromUpdated(), id);
 
             if (!isSuccess)
@@ -110,6 +91,38 @@ namespace CoffeeManagementAPI.Controllers
                 data = newCus,
                 message = "Updated successfully"
             });
+        }
+
+        [HttpGet("paginate")]
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<IActionResult> Paginate([FromQuery] PaginationObject pagination)
+        {
+
+            var cusList = await _customerRepository.GetCustomerPagination(pagination);
+
+            return Ok(new
+            {
+                page = pagination.page,
+                pageSize = pagination.pageSize,
+                data= cusList
+            }) ;
+        }
+
+        [HttpGet("isuserexist")]
+        [Authorize(Roles ="Admin,Staff")]
+        public async Task<IActionResult> IsUserExist([FromQuery] string phoneNumber) {
+            var cus = await _customerRepository.GetCustomerByPhonenumber(phoneNumber);
+
+            if (cus == null)
+            {
+                return NotFound(new
+                {
+                    message = "User is not found"
+                }) ;
+            }
+
+            return Ok(cus);
+        
         }
 
     }

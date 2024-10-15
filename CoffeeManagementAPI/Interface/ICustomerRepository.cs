@@ -19,5 +19,7 @@ namespace CoffeeManagementAPI.Interface
 
         Task<List<CustomerDTO>> GetCustomerPagination(PaginationObject pagination);
 
+        Task<CustomerDTO?> GetCustomerByPhonenumber(string phonenumber);
+
     }
 }

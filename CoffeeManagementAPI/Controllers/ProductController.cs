@@ -24,9 +24,6 @@ namespace CoffeeManagementAPI.Controllers
         [Authorize(Roles ="Admin,Staff")]
         public async Task<IActionResult> GetAllProduct() {
 
-            if (!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            }
 
             var prodList = await _productRepository.GetAllProduct();
 
@@ -38,10 +35,6 @@ namespace CoffeeManagementAPI.Controllers
         [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> GetProductById([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var prod = await _productRepository.GetProductById(id);
 
@@ -56,10 +49,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductDTO createProductDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             var newProduct = createProductDTO.toProductFromCreate();
             bool isSuccess = await _productRepository.CreateNewProduct(newProduct);
             if (!isSuccess) { 
@@ -73,10 +62,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpPut("update/{id:int}")]
         public async Task<IActionResult> UpdateProduct([FromBody] CreateProductDTO newProductDTO, [FromRoute] int id)
         {
-            if (!ModelState.IsValid) 
-            {
-                return BadRequest(ModelState);
-            }
             var newProduct = newProductDTO.toProductFromCreate();
             var (isSuccess,product) =await _productRepository.UpdateProduct(newProduct, id);
 
@@ -94,10 +79,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var isSuccess = await _productRepository.DeleteProduct(id);
             if(!isSuccess)
@@ -114,10 +95,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpGet("getproductbycategory/{categoryId:int}")]
         public async Task<IActionResult> GetByCategory([FromRoute] int categoryId)
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             var prodList = await _productRepository.GetProductByCategory(categoryId);
 
@@ -127,10 +104,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpGet("paginate")]
         public async Task<IActionResult> GetPaginate([FromQuery] PaginationObject pagination)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             
             var prodList = await _productRepository.GetProductPagination(pagination);
 
