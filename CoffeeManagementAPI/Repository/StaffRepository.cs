@@ -15,8 +15,8 @@ namespace CoffeeManagementAPI.Repository
 
         ITokenService _tokenService;
         PasswordHasher<Staff> _passwordHasher;
-        ApplicaitonDBContext _context;
-        public StaffRepository(ITokenService tokenService, ApplicaitonDBContext context)
+        ApplicationDBContext _context;
+        public StaffRepository(ITokenService tokenService, ApplicationDBContext context)
         {
             _tokenService = tokenService;
             _passwordHasher = new PasswordHasher<Staff>();

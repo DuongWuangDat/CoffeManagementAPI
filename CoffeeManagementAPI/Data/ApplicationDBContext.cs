@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeManagementAPI.Data
 {
-    public class ApplicaitonDBContext : DbContext
+    public class ApplicationDBContext : DbContext
     {
-        public ApplicaitonDBContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
+        public ApplicationDBContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
               
         }

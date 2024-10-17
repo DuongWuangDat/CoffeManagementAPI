@@ -20,7 +20,7 @@ builder.Services.AddSwaggerGen();
 
 
 //Prepare DB context
-builder.Services.AddDbContext<ApplicaitonDBContext>(option =>
+builder.Services.AddDbContext<ApplicationDBContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectString"));
 });

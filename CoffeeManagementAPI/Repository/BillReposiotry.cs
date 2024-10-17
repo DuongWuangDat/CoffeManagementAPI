@@ -10,8 +10,8 @@ namespace CoffeeManagementAPI.Repository
 {
     public class BillRepository : IBillRepository
     {
-        ApplicaitonDBContext _context;
-        public BillRepository(ApplicaitonDBContext context)
+        ApplicationDBContext _context;
+        public BillRepository(ApplicationDBContext context)
         {
              _context = context;
         }

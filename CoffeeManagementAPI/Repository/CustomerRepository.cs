@@ -10,9 +10,9 @@ namespace CoffeeManagementAPI.Repository
 {
     public class CustomerRepository : ICustomerRepository
     {
-        ApplicaitonDBContext _context;
+        ApplicationDBContext _context;
 
-        public CustomerRepository(ApplicaitonDBContext context) 
+        public CustomerRepository(ApplicationDBContext context) 
         {
             _context = context;
         }

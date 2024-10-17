@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CoffeeManagementAPI.Migrations
 {
-    [DbContext(typeof(ApplicaitonDBContext))]
+    [DbContext(typeof(ApplicationDBContext))]
     [Migration("20241004032400_AddVoucherType")]
     partial class AddVoucherType
     {

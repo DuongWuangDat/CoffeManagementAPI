@@ -9,8 +9,8 @@ namespace CoffeeManagementAPI.Services
 {
     public class ReportService : IReportService
     {
-        ApplicaitonDBContext _context;
-        public ReportService(ApplicaitonDBContext context)
+        ApplicationDBContext _context;
+        public ReportService(ApplicationDBContext context)
         {
             _context = context;
         }

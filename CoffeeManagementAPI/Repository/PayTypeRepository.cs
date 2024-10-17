@@ -7,8 +7,8 @@ namespace CoffeeManagementAPI.Repository
 {
     public class PayTypeRepository : IPayTypeRepository
     {
-        ApplicaitonDBContext _context;
-        public PayTypeRepository(ApplicaitonDBContext context)
+        ApplicationDBContext _context;
+        public PayTypeRepository(ApplicationDBContext context)
         {
             _context = context;
 

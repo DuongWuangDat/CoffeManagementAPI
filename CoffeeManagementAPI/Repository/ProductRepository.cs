@@ -10,8 +10,8 @@ namespace CoffeeManagementAPI.Repository
 {
     public class ProductRepository : IProductRepository
     {
-        ApplicaitonDBContext _context;
-        public ProductRepository(ApplicaitonDBContext context)
+        ApplicationDBContext _context;
+        public ProductRepository(ApplicationDBContext context)
         {
             _context = context;
         }

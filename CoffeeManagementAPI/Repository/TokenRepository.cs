@@ -7,8 +7,8 @@ namespace CoffeeManagementAPI.Repository
 {
     public class TokenRepository : ITokenRepository
     {
-        ApplicaitonDBContext _context;
-        public TokenRepository(ApplicaitonDBContext context)
+        ApplicationDBContext _context;
+        public TokenRepository(ApplicationDBContext context)
         {
                _context = context;
         }

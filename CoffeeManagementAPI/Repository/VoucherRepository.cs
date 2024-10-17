@@ -9,8 +9,8 @@ namespace CoffeeManagementAPI.Repository
 {
     public class VoucherRepository : IVoucherRepository
     {
-        ApplicaitonDBContext _context;
-        public VoucherRepository(ApplicaitonDBContext context)
+        ApplicationDBContext _context;
+        public VoucherRepository(ApplicationDBContext context)
         {
             _context = context;
         }

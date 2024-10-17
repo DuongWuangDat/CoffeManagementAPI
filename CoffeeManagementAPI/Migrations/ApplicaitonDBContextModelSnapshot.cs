@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CoffeeManagementAPI.Migrations
 {
-    [DbContext(typeof(ApplicaitonDBContext))]
+    [DbContext(typeof(ApplicationDBContext))]
     partial class ApplicaitonDBContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

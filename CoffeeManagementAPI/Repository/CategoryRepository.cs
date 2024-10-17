@@ -9,9 +9,9 @@ namespace CoffeeManagementAPI.Repository
     public class CategoryRepository : ICategoryRepository
     {
 
-        ApplicaitonDBContext _context;
+        ApplicationDBContext _context;
 
-        public CategoryRepository(ApplicaitonDBContext context)
+        public CategoryRepository(ApplicationDBContext context)
         {
             _context = context;
         }

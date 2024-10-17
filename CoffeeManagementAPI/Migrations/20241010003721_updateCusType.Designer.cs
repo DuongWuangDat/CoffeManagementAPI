@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CoffeeManagementAPI.Migrations
 {
-    [DbContext(typeof(ApplicaitonDBContext))]
+    [DbContext(typeof(ApplicationDBContext))]
     [Migration("20241010003721_updateCusType")]
     partial class updateCusType
     {
