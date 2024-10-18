@@ -99,6 +99,7 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IPayTypeRepository, PayTypeRepository>();
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 builder.Services.AddScoped<ISendMailService, SendEmailService>();
+builder.Services.AddScoped<ICustomerTypeRepository, CustomerTypeRepository>();
 
 
 var app = builder.Build();

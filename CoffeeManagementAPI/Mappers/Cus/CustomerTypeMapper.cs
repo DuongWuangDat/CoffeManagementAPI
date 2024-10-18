@@ -16,5 +16,15 @@ namespace CoffeeManagementAPI.Mappers.Cus
                 DiscountValue = customerType.DiscountValue,
             };
         }
+
+        public static CustomerType toCustomerFromCreate( this CreateCustomerTypeDTO createCustomerTypeDTO )
+        {
+            return new()
+            {
+                BoundaryRevenue = createCustomerTypeDTO.BoundaryRevenue,
+                CustomerTypeName = createCustomerTypeDTO.CustomerTypeName,
+                DiscountValue = createCustomerTypeDTO.DiscountValue,
+            };
+        }
     }
 }
