@@ -7,7 +7,6 @@ namespace CoffeeManagementAPI.Controllers
 {
     [ApiController]
     [Route("/api/v1/sendemail")]
-    [Authorize]
     public class SendEmailController: ControllerBase
     {
         ISendMailService _sendMailService;

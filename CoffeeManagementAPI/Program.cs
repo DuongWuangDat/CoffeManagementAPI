@@ -138,10 +138,7 @@ else
 
 app.UseHttpsRedirection();
 
-app.UseCors(x =>
-    x.AllowAnyHeader()
-    .AllowAnyMethod()
-    .AllowAnyOrigin());
+
 
 app.MapControllers();
 
@@ -181,5 +178,11 @@ app.Use(async (context, next) =>
 });
 
 app.UseAuthorization();
+
+app.UseCors(x =>
+    x.AllowAnyHeader()
+    .AllowAnyMethod()
+    .WithOrigins("*")
+    );
 
 app.Run();
