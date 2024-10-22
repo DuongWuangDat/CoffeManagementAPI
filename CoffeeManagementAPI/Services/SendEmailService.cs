@@ -6,7 +6,13 @@ namespace CoffeeManagementAPI.Services
 {
     public class SendEmailService : ISendMailService
     {
-        public async Task<bool> SendMail(string email, string code)
+        private readonly IWebHostEnvironment _env;
+
+        public SendEmailService(IWebHostEnvironment env)
+        {
+            _env = env;
+        }
+        public async Task<(bool,string)> SendMail(string email, string code)
         {
             try
             {
@@ -26,20 +32,20 @@ namespace CoffeeManagementAPI.Services
                 mail.Body = CreateBody(code);
 
                 await smtpClient.SendMailAsync(mail);
-                return true;
+                return (true,"");
 
             }
             catch(Exception ex)
             {
                 Console.WriteLine(ex);
-                return false;
+                return (false,ex.Message);
             }
         }
 
         string CreateBody(string code)
         {
             string body = "";
-            using (StreamReader str = new StreamReader("MailTemplate/emailTemplate.html"))
+            using (StreamReader str = new StreamReader(Path.Combine(_env.ContentRootPath, "MailTemplate/emailTemplate.html")))
             {
                 body = str.ReadToEnd();
             }

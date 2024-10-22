@@ -2,7 +2,7 @@
 {
     public interface ISendMailService
     {
-        Task<bool> SendMail(string email, string code);
+        Task<(bool, string)> SendMail(string email, string code);
 
     }
 }

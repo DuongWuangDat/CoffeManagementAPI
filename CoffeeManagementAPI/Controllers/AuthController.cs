@@ -32,7 +32,7 @@ namespace CoffeeManagementAPI.Controllers
             var refreshToken = await _tokenService.GenerateRefreshToken(newStaff);
             return Ok(new
             {
-                data= newStaff,
+                data= newStaff.toStaffDTO(),
                 accessToken= accessToken,
                 refreshToken=refreshToken,
             });

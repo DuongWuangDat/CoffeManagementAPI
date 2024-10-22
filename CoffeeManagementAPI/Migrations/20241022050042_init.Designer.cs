@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoffeeManagementAPI.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20241003081946_fixDB")]
-    partial class fixDB
+    [Migration("20241022050042_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,13 +33,16 @@ namespace CoffeeManagementAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BillId"));
 
-                    b.Property<int>("CustomerId")
+                    b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PayTypeId")
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("PayTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StaffId")
+                    b.Property<int?>("StaffId")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
@@ -51,8 +54,14 @@ namespace CoffeeManagementAPI.Migrations
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("VoucherId")
+                    b.Property<int?>("VoucherId")
                         .HasColumnType("int");
+
+                    b.Property<int>("VoucherTypeIndex")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("VoucherValue")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("BillId");
 
@@ -66,14 +75,17 @@ namespace CoffeeManagementAPI.Migrations
 
                     b.ToTable("Bills", t =>
                         {
-                            t.HasCheckConstraint("CK_STATUS_BILL", "[Status] IN ('Đã thanh toán', 'Chưa thanh toán')");
+                            t.HasCheckConstraint("CK_STATUS_BILL", "[Status] IN ('Đang chờ phục vụ', 'Đã hoàn thành')");
                         });
                 });
 
             modelBuilder.Entity("CoffeeManagementAPI.Model.BillDetail", b =>
                 {
-                    b.Property<int>("ProductId")
+                    b.Property<int>("BillDetailId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BillDetailId"));
 
                     b.Property<int>("BillId")
                         .HasColumnType("int");
@@ -81,12 +93,24 @@ namespace CoffeeManagementAPI.Migrations
                     b.Property<int>("ProductCount")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("ProductPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal>("TotalPriceDtail")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("ProductId", "BillId");
+                    b.HasKey("BillDetailId");
 
                     b.HasIndex("BillId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("BillDetails");
                 });
@@ -106,6 +130,18 @@ namespace CoffeeManagementAPI.Migrations
                     b.HasKey("CategoryID");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryID = 1,
+                            CategoryName = "Đồ ăn"
+                        },
+                        new
+                        {
+                            CategoryID = 2,
+                            CategoryName = "Đồ uống"
+                        });
                 });
 
             modelBuilder.Entity("CoffeeManagementAPI.Model.Customer", b =>
@@ -120,8 +156,12 @@ namespace CoffeeManagementAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CustomerTypeId")
+                    b.Property<int?>("CustomerTypeId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -152,6 +192,9 @@ namespace CoffeeManagementAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("DiscountValue")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("CustomerTypeID");
 
                     b.HasIndex("BoundaryRevenue")
@@ -175,6 +218,18 @@ namespace CoffeeManagementAPI.Migrations
                     b.HasKey("PayTypeId");
 
                     b.ToTable("PayTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            PayTypeId = 1,
+                            PayTypeName = "Online"
+                        },
+                        new
+                        {
+                            PayTypeId = 2,
+                            PayTypeName = "Tiền mặt"
+                        });
                 });
 
             modelBuilder.Entity("CoffeeManagementAPI.Model.Product", b =>
@@ -185,8 +240,12 @@ namespace CoffeeManagementAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductID"));
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsSoldOut")
                         .HasColumnType("bit");
@@ -277,7 +336,7 @@ namespace CoffeeManagementAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("VoucherTypeId")
+                    b.Property<int?>("VoucherTypeId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("VoucherValue")
@@ -287,7 +346,10 @@ namespace CoffeeManagementAPI.Migrations
 
                     b.HasIndex("VoucherTypeId");
 
-                    b.ToTable("Vouchers");
+                    b.ToTable("Vouchers", t =>
+                        {
+                            t.HasCheckConstraint("CK_VOUCHER_DATE", "[CreatedDate] < [ExpiredDate]");
+                        });
                 });
 
             modelBuilder.Entity("CoffeeManagementAPI.Model.VoucherType", b =>
@@ -305,6 +367,18 @@ namespace CoffeeManagementAPI.Migrations
                     b.HasKey("VoucherTypeId");
 
                     b.ToTable("VoucherTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            VoucherTypeId = 1,
+                            TypeName = "Theo phần trăm"
+                        },
+                        new
+                        {
+                            VoucherTypeId = 2,
+                            TypeName = "Giảm trực tiếp"
+                        });
                 });
 
             modelBuilder.Entity("CoffeeManagementAPI.Model.Bill", b =>
@@ -312,26 +386,22 @@ namespace CoffeeManagementAPI.Migrations
                     b.HasOne("CoffeeManagementAPI.Model.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("CoffeeManagementAPI.Model.PayType", "PayType")
                         .WithMany()
                         .HasForeignKey("PayTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("CoffeeManagementAPI.Model.Staff", "Staff")
                         .WithMany("Bills")
                         .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("CoffeeManagementAPI.Model.Voucher", "Voucher")
                         .WithMany()
                         .HasForeignKey("VoucherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Customer");
 
@@ -345,16 +415,15 @@ namespace CoffeeManagementAPI.Migrations
             modelBuilder.Entity("CoffeeManagementAPI.Model.BillDetail", b =>
                 {
                     b.HasOne("CoffeeManagementAPI.Model.Bill", "Bill")
-                        .WithMany()
+                        .WithMany("BillDetails")
                         .HasForeignKey("BillId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CoffeeManagementAPI.Model.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Bill");
 
@@ -366,8 +435,7 @@ namespace CoffeeManagementAPI.Migrations
                     b.HasOne("CoffeeManagementAPI.Model.CustomerType", "CustomerType")
                         .WithMany("Customers")
                         .HasForeignKey("CustomerTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("CustomerType");
                 });
@@ -377,8 +445,7 @@ namespace CoffeeManagementAPI.Migrations
                     b.HasOne("CoffeeManagementAPI.Model.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Category");
                 });
@@ -388,10 +455,14 @@ namespace CoffeeManagementAPI.Migrations
                     b.HasOne("CoffeeManagementAPI.Model.VoucherType", "VoucherType")
                         .WithMany()
                         .HasForeignKey("VoucherTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("VoucherType");
+                });
+
+            modelBuilder.Entity("CoffeeManagementAPI.Model.Bill", b =>
+                {
+                    b.Navigation("BillDetails");
                 });
 
             modelBuilder.Entity("CoffeeManagementAPI.Model.Category", b =>

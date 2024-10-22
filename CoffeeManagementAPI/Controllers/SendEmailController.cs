@@ -19,9 +19,9 @@ namespace CoffeeManagementAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> SendEmail([FromBody] SendEmailDTO sendEmailDTO)
         {
-            var isSuccess = await _sendMailService.SendMail(sendEmailDTO.email, sendEmailDTO.code);
+            var (isSuccess,err) = await _sendMailService.SendMail(sendEmailDTO.email, sendEmailDTO.code);
             if (!isSuccess) {
-                return BadRequest("Something went wrong");
+                return BadRequest(err);
             }
 
             return Ok(new
