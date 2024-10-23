@@ -27,7 +27,14 @@ namespace CoffeeManagementAPI.Controllers
         {
 
             Staff newStaff = registerStaffDTO.toStaffFromRegister();
-            await _staffRepository.RegisterStaff(newStaff);
+            var isSuccees =await _staffRepository.RegisterStaff(newStaff);
+            if (!isSuccees)
+            {
+                return BadRequest(new
+                {
+                    message = "User name is existed"
+                });
+            }
             var accessToken = _tokenService.GenerateAccessToken(newStaff);
             var refreshToken = await _tokenService.GenerateRefreshToken(newStaff);
             return Ok(new

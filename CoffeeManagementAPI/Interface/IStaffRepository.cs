@@ -7,7 +7,7 @@ namespace CoffeeManagementAPI.Interface
     public interface IStaffRepository
     {
 
-        public Task RegisterStaff(Staff staff);
+        public Task<bool> RegisterStaff(Staff staff);
         public Task<Staff?> FindUser(string username);
 
         Task<List<StaffDTO>> GetAllStaff();

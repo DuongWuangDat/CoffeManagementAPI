@@ -63,11 +63,17 @@ namespace CoffeeManagementAPI.Repository
             return staffList;
         }
 
-        public async Task RegisterStaff(Staff staff)
+        public async Task<bool> RegisterStaff(Staff staff)
         {
-                staff.Password = _passwordHasher.HashPassword(staff, staff.Password);
-                await _context.Staff.AddAsync(staff);
-                await _context.SaveChangesAsync();
+            var isUser = await _context.Staff.AnyAsync(s=> s.Username == staff.Username);
+            if (!isUser)
+            {
+                return false;
+            }
+            staff.Password = _passwordHasher.HashPassword(staff, staff.Password);
+            await _context.Staff.AddAsync(staff);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<(bool,Staff?)> UpdateStaff(Staff staff, int i)
