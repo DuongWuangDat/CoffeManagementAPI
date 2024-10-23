@@ -14,7 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(opt =>
+{
+    opt.JsonSerializerOptions.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 builder.Services.AddSwaggerGen(option =>
@@ -44,8 +47,9 @@ builder.Services.AddSwaggerGen(option =>
             new string[]{}
         }
     }) ;
-});
 
+    option.OperationFilter<AddCharsetOperationFilter>();
+});
 
 //Prepare DB context
 builder.Services.AddDbContext<ApplicationDBContext>(option =>
@@ -134,13 +138,13 @@ var app = builder.Build();
 
 
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
 
     app.UseSwagger();
     app.UseSwaggerUI();
+
 }
 else
 {

@@ -17,15 +17,20 @@ namespace CoffeeManagementAPI.Repository
         }
         public async Task<bool> CreateNewBill(Bill bill)
         {
-            var voucher = await _context.Vouchers.FirstOrDefaultAsync(v => v.VoucherID == bill.VoucherId);
-
-            if (voucher == null)
+            if (bill.VoucherId !=null)
             {
-                return false;
-            }
+                var voucher = await _context.Vouchers.FirstOrDefaultAsync(v => v.VoucherID == bill.VoucherId);
 
-            bill.VoucherValue = voucher.VoucherValue;
-            bill.VoucherTypeIndex = (int)voucher.VoucherTypeId;
+                if (voucher == null)
+                {
+                    return false;
+                }
+
+                bill.VoucherValue = voucher.VoucherValue;
+                bill.VoucherTypeIndex = (int)voucher.VoucherTypeId;
+
+            }
+            
 
             var cusID = bill.CustomerId;
 
@@ -47,6 +52,7 @@ namespace CoffeeManagementAPI.Repository
                     cus.CustomerTypeId = customerType.CustomerTypeID;
                 }
             }
+            Console.WriteLine(bill.Status);
 
             await _context.AddAsync(bill);
             await _context.SaveChangesAsync();

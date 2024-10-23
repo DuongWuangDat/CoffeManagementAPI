@@ -65,8 +65,8 @@ namespace CoffeeManagementAPI.Repository
 
         public async Task<bool> RegisterStaff(Staff staff)
         {
-            var isUser = await _context.Staff.AnyAsync(s=> s.Username == staff.Username);
-            if (!isUser)
+            var isUser = await _context.Staff.FirstOrDefaultAsync(s=> s.Username == staff.Username);
+            if (isUser != null)
             {
                 return false;
             }

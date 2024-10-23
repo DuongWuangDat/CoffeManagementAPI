@@ -4,6 +4,7 @@ using CoffeeManagementAPI.Mappers.BillMapper;
 using CoffeeManagementAPI.QueryObject;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace CoffeeManagementAPI.Controllers
 {
@@ -43,6 +44,14 @@ namespace CoffeeManagementAPI.Controllers
         [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Create([FromBody] CreatedBillDTO createdBillDTO)
         {
+            
+            //var newBill = JsonSerializer.Deserialize<CreatedBillDTO>(json);
+            if(createdBillDTO.Status != "Pending" && createdBillDTO.Status != "Successful") {
+                return BadRequest(new
+                {
+                    message = "Bill status should be 'Pending' or 'Successful'"
+                });
+            }
             var bill = createdBillDTO.toBillFromUpdated();
             var isSuccess = await _billRepository.CreateNewBill(bill);
             if (!isSuccess)
@@ -52,7 +61,7 @@ namespace CoffeeManagementAPI.Controllers
 
             return Ok(new
             {
-                data = bill,
+                data = bill.toBillDTO(),
                 message = "Created successfully"
             });
         }
