@@ -107,7 +107,7 @@ namespace CoffeeManagementAPI.Services
 
         public async Task<int> GetTotalOrder(DateTime start, DateTime end)
         {
-            var totalOrder = await _context.BillDetails.Where(b => b.Bill.DateTime >= start && b.Bill.DateTime <= end).SumAsync(b => b.ProductCount);
+            var totalOrder = await _context.BillDetails.Include(b=> b.Bill).Where(b => b.Bill.DateTime >= start && b.Bill.DateTime <= end).SumAsync(b => b.ProductCount);
 
             return totalOrder;
         }

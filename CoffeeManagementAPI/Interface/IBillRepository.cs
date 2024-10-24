@@ -7,7 +7,7 @@ namespace CoffeeManagementAPI.Interface
     public interface IBillRepository
     {
 
-        Task<bool> CreateNewBill(Bill bill);
+        Task<(bool,string)> CreateNewBill(Bill bill);
 
         Task DeleteBill(int id);
 

@@ -1,4 +1,5 @@
 ﻿using CoffeeManagementAPI.DTOs.Staff;
+using CoffeeManagementAPI.ErrorHandler;
 using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Mappers.Auth;
 using CoffeeManagementAPI.Model;
@@ -31,10 +32,7 @@ namespace CoffeeManagementAPI.Controllers
     
             if (!isSuccees)
             {
-                return BadRequest(new
-                {
-                    message = "Username is existed"
-                });
+                return BadRequest(new ApiError("Username is existed"));
             }
             var accessToken = _tokenService.GenerateAccessToken(newStaff);
             var refreshToken = await _tokenService.GenerateRefreshToken(newStaff);
@@ -51,7 +49,7 @@ namespace CoffeeManagementAPI.Controllers
         public async Task<IActionResult> RefreshToken()
         {
             var authorHeader = Request.Headers["Authorization"].FirstOrDefault();
-            if(authorHeader == null) { return BadRequest(); }
+            if(authorHeader == null) { return Unauthorized(new ApiError("Token is missing")); }
             var token = authorHeader.Substring("Bearer ".Length).Trim();
             var accessToken = _tokenService.RefreshThisToken(token);
             
@@ -67,12 +65,12 @@ namespace CoffeeManagementAPI.Controllers
             Staff? staff =await _staffRepository.FindUser(loginStaff.Username);
             if(staff == null)
             {
-                return Unauthorized("Unauthorized");
+                return Unauthorized(new ApiError("User is not found"));
             }
             bool checkPass = _authorize.VerifyPassword(staff, staff.Password, loginStaff.Password);
             if (!checkPass)
             {
-                return Unauthorized("Unauthorized");
+                return Unauthorized("Password is incorrect");
             }
             var accessToken = _tokenService.GenerateAccessToken(staff);
             var refreshToken = await _tokenService.GenerateRefreshToken(staff);

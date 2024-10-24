@@ -1,4 +1,5 @@
 ﻿using CoffeeManagementAPI.DTOs.Customer;
+using CoffeeManagementAPI.ErrorHandler;
 using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Mappers.Cus;
 using CoffeeManagementAPI.QueryObject;
@@ -33,7 +34,7 @@ namespace CoffeeManagementAPI.Controllers
             var cus = await _customerRepository.GetCustomerById(id);
             if (cus == null)
             {
-                return NotFound("Customer not found");
+                return NotFound(new ApiError("Customer is not found"));
             }
 
             return Ok(cus);
@@ -49,7 +50,7 @@ namespace CoffeeManagementAPI.Controllers
             var isSuccess = await _customerRepository.CreateNewCustomer(newCus);
             if (!isSuccess)
             {
-                return BadRequest("Something went wrong");
+                return BadRequest(new ApiError("Something went wrong"));
             }
 
             return Ok(new
@@ -63,11 +64,11 @@ namespace CoffeeManagementAPI.Controllers
         public async Task<IActionResult> DeleteById ([FromRoute] int id)
         {
 
-            var isSuccess = await _customerRepository.DeleteCustomer(id);
+            var (isSuccess, errMsg) = await _customerRepository.DeleteCustomer(id);
 
             if (!isSuccess)
             {
-                return NotFound("Customer is not found");
+                return NotFound(new ApiError(errMsg));
             }
 
             return Ok(new
@@ -83,12 +84,12 @@ namespace CoffeeManagementAPI.Controllers
 
             if (!isSuccess)
             {
-                return NotFound("Customer is not found");
+                return NotFound(new ApiError("Customer is not found"));
             }
 
             return Ok(new
             {
-                data = newCus,
+                data = newCus?.toCustomerDTO(),
                 message = "Updated successfully"
             });
         }
@@ -115,10 +116,7 @@ namespace CoffeeManagementAPI.Controllers
 
             if (cus == null)
             {
-                return NotFound(new
-                {
-                    message = "User is not found"
-                }) ;
+                return NotFound(new ApiError("Customer is not found")) ;
             }
 
             return Ok(cus);

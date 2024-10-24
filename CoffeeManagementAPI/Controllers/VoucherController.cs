@@ -1,4 +1,5 @@
 ﻿using CoffeeManagementAPI.DTOs.Voucher;
+using CoffeeManagementAPI.ErrorHandler;
 using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Mappers.VoucherMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -36,7 +37,7 @@ namespace CoffeeManagementAPI.Controllers
 
             if(voucher == null)
             {
-                return NotFound("Voucher is not found");
+                return NotFound(new ApiError("Voucher is not found"));
             }
 
             return Ok(voucher);
@@ -49,7 +50,7 @@ namespace CoffeeManagementAPI.Controllers
             var voucher = await _voucherRepository.GetVoucherByCode(code);
             if(voucher == null)
             {
-                return NotFound("Voucher is not found");
+                return NotFound(new ApiError("Voucher is not found"));
             }
             return Ok(voucher);
         }
@@ -60,14 +61,14 @@ namespace CoffeeManagementAPI.Controllers
 
             if (!createdVoucher.IsValidation())
             {
-                return BadRequest("ExpiredDate must be greater than CreatedDate");
+                return BadRequest(new ApiError("ExpiredDate must be greater than CreatedDate"));
             }
             var newVoucher = createdVoucher.toVoucherFromCreated();
             var isSuccess = await _voucherRepository.CreateNewVoucher(newVoucher);
 
             if (!isSuccess)
             {
-                return BadRequest("Something went wrong"); 
+                return BadRequest(new ApiError("Something went wrong")); 
             }
             return CreatedAtAction(nameof(GetById), new {id = newVoucher.VoucherID}, newVoucher.toVoucherDTO());
 
@@ -81,9 +82,9 @@ namespace CoffeeManagementAPI.Controllers
 
             if (!isSucess)
             {
-                return NotFound("Voucher is not found");
+                return NotFound(new ApiError("Voucher is not found"));
             }
-            return Ok("Deleted voucher successfully");
+            return Ok(new ApiError("Deleted voucher successfully"));
         }
 
         [HttpPut("update/{id:int}")]
@@ -94,7 +95,7 @@ namespace CoffeeManagementAPI.Controllers
 
             if (!isSuccess)
             {
-                return BadRequest("Something went wrong");
+                return BadRequest(new ApiError("Voucher is not found"));
             }
 
             return Ok(new

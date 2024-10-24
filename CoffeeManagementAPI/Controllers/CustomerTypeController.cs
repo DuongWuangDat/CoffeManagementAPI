@@ -1,4 +1,5 @@
 ﻿using CoffeeManagementAPI.DTOs.Customer;
+using CoffeeManagementAPI.ErrorHandler;
 using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Mappers.Cus;
 using Microsoft.AspNetCore.Authorization;
@@ -34,7 +35,7 @@ namespace CoffeeManagementAPI.Controllers
 
             if (!isSuccess)
             {
-                return BadRequest("Something went wrong");
+                return BadRequest(new ApiError("Something went wrong"));
             }
 
             return Ok(new
@@ -51,7 +52,7 @@ namespace CoffeeManagementAPI.Controllers
             var isSuccess = await _customerTypeRepository.UpdateCustomerType(cusType, id);
             if(!isSuccess)
             {
-                return NotFound("CustomerType not found");
+                return NotFound(new ApiError("Customer is not found"));
             }
 
             return Ok(new
@@ -67,7 +68,7 @@ namespace CoffeeManagementAPI.Controllers
             var isSuccess = await _customerTypeRepository.DeleteCustomerType(id);
             if (!isSuccess)
             {
-                return NotFound("Customer type is not found");
+                return NotFound(new ApiError("Customer type is not found"));
             }
 
             return Ok(new

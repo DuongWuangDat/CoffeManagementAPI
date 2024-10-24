@@ -1,4 +1,5 @@
 ﻿using CoffeeManagementAPI.DTOs.SendEmail;
+using CoffeeManagementAPI.ErrorHandler;
 using CoffeeManagementAPI.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,7 @@ namespace CoffeeManagementAPI.Controllers
         {
             var (isSuccess,err) = await _sendMailService.SendMail(sendEmailDTO.email, sendEmailDTO.code);
             if (!isSuccess) {
-                return BadRequest(err);
+                return BadRequest(new ApiError(err));
             }
 
             return Ok(new

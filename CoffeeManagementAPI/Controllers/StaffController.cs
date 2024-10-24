@@ -1,4 +1,5 @@
 ﻿using CoffeeManagementAPI.DTOs.Staff;
+using CoffeeManagementAPI.ErrorHandler;
 using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Mappers.Sta;
 using CoffeeManagementAPI.QueryObject;
@@ -33,7 +34,7 @@ namespace CoffeeManagementAPI.Controllers
             var isSuccess = await _staffRepository.DeleteStaff(id);
             if(!isSuccess)
             {
-                return NotFound("Staff is not found");
+                return NotFound(new ApiError("Staff is not found"));
             }
 
             return Ok("Deleted successfully");
@@ -49,7 +50,7 @@ namespace CoffeeManagementAPI.Controllers
 
             if (!isSuccess)
             {
-                return NotFound("New staff is updated");
+                return NotFound(new ApiError("Staff is not found"));
             }
 
             return Ok(new

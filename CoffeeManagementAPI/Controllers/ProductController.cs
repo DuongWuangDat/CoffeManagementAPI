@@ -1,4 +1,5 @@
 ﻿using CoffeeManagementAPI.DTOs.Product;
+using CoffeeManagementAPI.ErrorHandler;
 using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Mappers.Prod;
 using CoffeeManagementAPI.Model;
@@ -40,7 +41,7 @@ namespace CoffeeManagementAPI.Controllers
 
             if (prod == null)
             {
-                return NotFound("Product is not found");
+                return NotFound(new ApiError("Product is not found"));
             }
 
             return Ok(prod);
@@ -52,10 +53,13 @@ namespace CoffeeManagementAPI.Controllers
             var newProduct = createProductDTO.toProductFromCreate();
             bool isSuccess = await _productRepository.CreateNewProduct(newProduct);
             if (!isSuccess) { 
-                return BadRequest("Something went wrong");
+                return BadRequest(new ApiError("Something went wrong"));
             }
 
-            return CreatedAtAction(nameof(GetProductById), new { id = newProduct.ProductID }, newProduct.toProdDTO());
+            return Ok(new
+            {
+                data= newProduct
+            });
         }
 
 
@@ -67,7 +71,7 @@ namespace CoffeeManagementAPI.Controllers
 
             if (!isSuccess)
             {
-                return BadRequest("Something went wrong");
+                return BadRequest(new ApiError("Product is not found"));
             }
             return Ok(new
             {
@@ -83,7 +87,7 @@ namespace CoffeeManagementAPI.Controllers
             var isSuccess = await _productRepository.DeleteProduct(id);
             if(!isSuccess)
             {
-                return BadRequest("Something went wrong");
+                return BadRequest(new ApiError("Product is not found"));
             }
             return Ok(new
             {

@@ -15,7 +15,7 @@ namespace CoffeeManagementAPI.Repository
         {
              _context = context;
         }
-        public async Task<bool> CreateNewBill(Bill bill)
+        public async Task<(bool,string)> CreateNewBill(Bill bill)
         {
             if (bill.VoucherId !=null)
             {
@@ -23,7 +23,7 @@ namespace CoffeeManagementAPI.Repository
 
                 if (voucher == null)
                 {
-                    return false;
+                    return (false,"VoucherID is not found");
                 }
 
                 bill.VoucherValue = voucher.VoucherValue;
@@ -40,7 +40,7 @@ namespace CoffeeManagementAPI.Repository
 
                 if(cus == null)
                 {
-                    return false;
+                    return (false,"CustomerID is not found");
                 }
 
                 cus.Revenue += bill.TotalPrice;
@@ -52,12 +52,11 @@ namespace CoffeeManagementAPI.Repository
                     cus.CustomerTypeId = customerType.CustomerTypeID;
                 }
             }
-            Console.WriteLine(bill.Status);
 
             await _context.AddAsync(bill);
             await _context.SaveChangesAsync();
 
-            return true;
+            return (true,"");
 
         }
 

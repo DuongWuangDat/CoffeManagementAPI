@@ -51,6 +51,12 @@ builder.Services.AddSwaggerGen(option =>
     option.OperationFilter<AddCharsetOperationFilter>();
 });
 
+builder.Services.AddControllers().AddNewtonsoftJson(opt =>
+{
+    opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    opt.SerializerSettings.DateFormatString = "dd/MM/yyyy";
+});
+
 //Prepare DB context
 builder.Services.AddDbContext<ApplicationDBContext>(option =>
 {

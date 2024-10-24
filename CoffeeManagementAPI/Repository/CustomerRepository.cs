@@ -24,14 +24,14 @@ namespace CoffeeManagementAPI.Repository
             return true;
         }
 
-        public async Task<bool> DeleteCustomer(int i)
+        public async Task<(bool,string)> DeleteCustomer(int i)
         {
             var cus = await _context.Customers.FirstOrDefaultAsync(p=>p.CustomerID==i);
-            if (cus == null) { return false; }
+            if (cus == null) { return (false, "CustomerID is not found"); }
             _context.Customers.Remove(cus);
 
             await _context.SaveChangesAsync();
-            return true;
+            return (true, "");
         }
 
         public async Task<List<CustomerDTO>> GetAllCustomer()

@@ -14,7 +14,7 @@ namespace CoffeeManagementAPI.Model
         public string Image { get; set; } = string.Empty;
         public bool IsSoldOut { get; set; } = false;
         public int? CategoryId { get; set; }
-        public Category Category { get; set; } = new Category();
+        public Category? Category { get; set; }
 
     }
 }

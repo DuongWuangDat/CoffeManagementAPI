@@ -1,4 +1,5 @@
-﻿using CoffeeManagementAPI.Interface;
+﻿using CoffeeManagementAPI.ErrorHandler;
+using CoffeeManagementAPI.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,14 +22,14 @@ namespace CoffeeManagementAPI.Controllers
         {
             if (file == null || file.Length == 0)
             {
-                return BadRequest("No file uploaded.");
+                return BadRequest(new ApiError("No file uploaded."));
             }
 
             var imageURL = await _cloudinaryService.UploadImage(file);
 
             if (imageURL == null)
             {
-                return BadRequest("Something went wrong");
+                return BadRequest(new ApiError("Something went wrong"));
             }
 
             return Ok(new
@@ -44,7 +45,7 @@ namespace CoffeeManagementAPI.Controllers
             var isSuccess= await _cloudinaryService.DeleteImage(url);
             if (!isSuccess)
             {
-                return BadRequest("Something went wrong");
+                return BadRequest(new ApiError("Something went wrong"));
             }
 
             return Ok(new

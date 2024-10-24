@@ -1,4 +1,5 @@
 ﻿using CoffeeManagementAPI.DTOs.Bill;
+using CoffeeManagementAPI.ErrorHandler;
 using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Mappers.BillMapper;
 using CoffeeManagementAPI.QueryObject;
@@ -37,6 +38,11 @@ namespace CoffeeManagementAPI.Controllers
 
             var bill = await _billRepository.GetBillById(id);
 
+            if(bill == null)
+            {
+                return NotFound(new ApiError("Bill is not found"));
+            }
+
             return Ok(bill);
         }
 
@@ -47,16 +53,13 @@ namespace CoffeeManagementAPI.Controllers
             
             //var newBill = JsonSerializer.Deserialize<CreatedBillDTO>(json);
             if(createdBillDTO.Status != "Pending" && createdBillDTO.Status != "Successful") {
-                return BadRequest(new
-                {
-                    message = "Bill status should be 'Pending' or 'Successful'"
-                });
+                return BadRequest(new ApiError ("Bill status should be 'Pending' or 'Successful'"));
             }
             var bill = createdBillDTO.toBillFromUpdated();
-            var isSuccess = await _billRepository.CreateNewBill(bill);
+            var (isSuccess, errMsg) = await _billRepository.CreateNewBill(bill);
             if (!isSuccess)
             {
-                return BadRequest("Something went wrong");
+                return BadRequest(new ApiError(errMsg));
             }
 
             return Ok(new
