@@ -14,6 +14,27 @@ namespace CoffeeManagementAPI.Migrations
                 name: "CK_STATUS_BILL",
                 table: "Bills");
 
+            migrationBuilder.AddColumn<string>(
+                name: "Image",
+                table: "Categories",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
+
+            migrationBuilder.UpdateData(
+                table: "Categories",
+                keyColumn: "CategoryID",
+                keyValue: 1,
+                column: "Image",
+                value: "");
+
+            migrationBuilder.UpdateData(
+                table: "Categories",
+                keyColumn: "CategoryID",
+                keyValue: 2,
+                column: "Image",
+                value: "");
+
             migrationBuilder.AddCheckConstraint(
                 name: "CK_STATUS_BILL",
                 table: "Bills",
@@ -26,6 +47,10 @@ namespace CoffeeManagementAPI.Migrations
             migrationBuilder.DropCheckConstraint(
                 name: "CK_STATUS_BILL",
                 table: "Bills");
+
+            migrationBuilder.DropColumn(
+                name: "Image",
+                table: "Categories");
 
             migrationBuilder.AddCheckConstraint(
                 name: "CK_STATUS_BILL",

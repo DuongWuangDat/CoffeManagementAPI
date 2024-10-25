@@ -124,6 +124,10 @@ namespace CoffeeManagementAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("CategoryID");
 
                     b.ToTable("Categories");
@@ -132,12 +136,14 @@ namespace CoffeeManagementAPI.Migrations
                         new
                         {
                             CategoryID = 1,
-                            CategoryName = "Đồ ăn"
+                            CategoryName = "Đồ ăn",
+                            Image = ""
                         },
                         new
                         {
                             CategoryID = 2,
-                            CategoryName = "Đồ uống"
+                            CategoryName = "Đồ uống",
+                            Image = ""
                         });
                 });
 

@@ -65,10 +65,10 @@ namespace CoffeeManagementAPI.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<List<BillFromGetAllDTO>> GetAllBill()
+        public async Task<List<BillDTO>> GetAllBill()
         {
-            var billList = await _context.Bills.Select(b => b.toBillFromGetAllDTO()).ToListAsync();
-
+            var billList = await _context.Bills.Include(b=> b.BillDetails).Select(b => b.toBillDTO()).ToListAsync();
+           
             return billList;
         }
 
@@ -83,12 +83,29 @@ namespace CoffeeManagementAPI.Repository
             return bill.toBillDTO();
         }
 
-        public async Task<List<BillFromGetAllDTO>> GetBillPagination(PaginationObject pagination)
+        public async Task<List<BillDTO>> GetBillPagination(PaginationObject pagination)
         {
-            var billSelectable = _context.Bills.Select(b => b.toBillFromGetAllDTO()).AsQueryable();
+            var billSelectable = _context.Bills.Include(b => b.BillDetails).Select(b => b.toBillDTO()).AsQueryable();
             var billList = await billSelectable.Skip(pagination.pageSize* (pagination.page-1)).Take(pagination.pageSize).ToListAsync();
 
             return billList;
+        }
+
+        public async Task<(bool, string)> UpdateStatus(int id, string status)
+        {
+            var bill = await _context.Bills.FirstOrDefaultAsync(b=> b.BillId == id);
+            if(bill == null)
+            {
+                return (false, "Bill is not found");
+            }
+            if(bill.Status.Equals(status))
+            {
+                return (false, "Bill status did not change");
+            }
+            bill.Status = status;
+            await _context.SaveChangesAsync();
+
+            return (true, "Update status bill successfully");
         }
     }
 }

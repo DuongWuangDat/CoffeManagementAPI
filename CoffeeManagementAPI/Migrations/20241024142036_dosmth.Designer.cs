@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoffeeManagementAPI.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20241023172302_dosmth")]
+    [Migration("20241024142036_dosmth")]
     partial class dosmth
     {
         /// <inheritdoc />
@@ -127,6 +127,10 @@ namespace CoffeeManagementAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("CategoryID");
 
                     b.ToTable("Categories");
@@ -135,12 +139,14 @@ namespace CoffeeManagementAPI.Migrations
                         new
                         {
                             CategoryID = 1,
-                            CategoryName = "Đồ ăn"
+                            CategoryName = "Đồ ăn",
+                            Image = ""
                         },
                         new
                         {
                             CategoryID = 2,
-                            CategoryName = "Đồ uống"
+                            CategoryName = "Đồ uống",
+                            Image = ""
                         });
                 });
 

@@ -1,11 +1,9 @@
 ﻿namespace CoffeeManagementAPI.DTOs.Product
 {
-    public class CategoryDTO
+    public class CreateCategoryDTO
     {
-        public int CategoryID { get; set; }
         public string CategoryName { get; set; } = string.Empty;
 
         public string Image { get; set; }
-
     }
 }

@@ -16,5 +16,14 @@ namespace CoffeeManagementAPI.Mappers.Cate
             };
         }
 
+        public static Category toCategoryFromCreate(this CreateCategoryDTO createCategoryDTO)
+        {
+            return new Category
+            {
+                CategoryName = createCategoryDTO.CategoryName,
+                Image = createCategoryDTO.Image,
+            };
+        }
+
     }
 }

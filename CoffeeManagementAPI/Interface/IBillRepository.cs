@@ -13,9 +13,11 @@ namespace CoffeeManagementAPI.Interface
 
         Task<BillDTO?> GetBillById(int id);
 
-        Task<List<BillFromGetAllDTO>> GetAllBill();
+        Task<List<BillDTO>> GetAllBill();
 
-        Task<List<BillFromGetAllDTO>> GetBillPagination(PaginationObject pagination);
+        Task<List<BillDTO>> GetBillPagination(PaginationObject pagination);
+
+        Task<(bool, string)> UpdateStatus(int id, string status);
 
     }
 }

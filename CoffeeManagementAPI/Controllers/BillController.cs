@@ -82,5 +82,27 @@ namespace CoffeeManagementAPI.Controllers
             });
         }
 
+        [HttpPut("updatestatus/{id:int}")]
+        public async Task<IActionResult> UpdateBill([FromBody] BillUpdateStatus billUpdateStatus, [FromRoute] int id)
+        {
+            var status = billUpdateStatus.Status;
+            if(status != "Pending" && status != "Successful")
+            {
+                return BadRequest(new ApiError("Status must be 'Pending' or 'Successful'"));
+            }
+
+            var (isSuccess, errMsg) = await _billRepository.UpdateStatus(id, status);
+            if (!isSuccess)
+            {
+                return BadRequest(new ApiError(errMsg));
+            }
+
+            return Ok(new
+            {
+                message = "Update status successfully"
+            });
+
+        }
+
     }
 }
