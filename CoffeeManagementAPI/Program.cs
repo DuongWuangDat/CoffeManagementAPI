@@ -188,39 +188,7 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 app.UseAuthentication();
-app.Use(async (context, next) =>
-{
-    
-    using(var scope = app.Services.CreateScope())
-    {
-        var tokenService = scope.ServiceProvider.GetRequiredService<ITokenService>();
-        
-        var header = context.Request.Headers["Authorization"].FirstOrDefault();
-        if(header == null)
-        {
-            await next.Invoke();
-            return;
-        }
-        var token = header.Substring("Bearer ".Length).Trim();
 
-        var checkToken = await tokenService.IsValidateToken(token);
-
-        if (!checkToken)
-        {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync(JsonSerializer.Serialize(new
-            {
-                message="Invalid token"
-            }));
-
-            return;
-        }
-    }
-
-
-    await next.Invoke();
-});
 
 app.UseAuthorization();
 

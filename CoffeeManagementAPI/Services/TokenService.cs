@@ -85,7 +85,6 @@ namespace CoffeeManagementAPI.Services
                 expires: DateTime.Now.AddDays(30),
                 signingCredentials: cred
                 );
-            await _tokenRepository.CreateToken(new JwtSecurityTokenHandler().WriteToken(refreshToken));
             return new JwtSecurityTokenHandler().WriteToken ( refreshToken );
         }
 
