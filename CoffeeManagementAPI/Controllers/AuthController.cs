@@ -26,7 +26,6 @@ namespace CoffeeManagementAPI.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterStaffDTO registerStaffDTO)
         {
-            Console.WriteLine(registerStaffDTO.StaffName);
             Staff newStaff = registerStaffDTO.toStaffFromRegister();
             var isSuccees =await _staffRepository.RegisterStaff(newStaff);
     

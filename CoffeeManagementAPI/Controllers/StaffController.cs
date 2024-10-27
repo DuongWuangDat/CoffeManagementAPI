@@ -1,6 +1,7 @@
 ﻿using CoffeeManagementAPI.DTOs.Staff;
 using CoffeeManagementAPI.ErrorHandler;
 using CoffeeManagementAPI.Interface;
+using CoffeeManagementAPI.Mappers.Auth;
 using CoffeeManagementAPI.Mappers.Sta;
 using CoffeeManagementAPI.QueryObject;
 using Microsoft.AspNetCore.Authorization;
@@ -78,6 +79,20 @@ namespace CoffeeManagementAPI.Controllers
 
         }
 
-
+        [HttpPost("/create")]
+        public async Task<IActionResult> CreateNewStaff([FromBody] RegisterStaffDTO registerStaffDTO)
+        {
+            var staff = registerStaffDTO.toStaffFromRegister();
+            var isSuccessfull = await _staffRepository.RegisterStaff(staff);
+            if (!isSuccessfull)
+            {
+                return BadRequest(new ApiError("Username is existed"));
+            }
+            return Ok(new
+            {
+                data = staff.toStaffDTO(),
+                message = "Created successfully"
+            });
+        }
     }
 }
