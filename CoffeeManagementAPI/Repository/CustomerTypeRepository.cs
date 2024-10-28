@@ -20,7 +20,7 @@ namespace CoffeeManagementAPI.Repository
         public async Task<bool> CreateNewCustomerType(CustomerType customerType)
         {
             await _context.CustomerTypes.AddAsync(customerType);
-
+            await _context.SaveChangesAsync();
             var cusPrev = await _context.CustomerTypes.OrderBy(c=> c.BoundaryRevenue).Where(c=> c.BoundaryRevenue > customerType.BoundaryRevenue).FirstOrDefaultAsync();
             if(cusPrev == null)
             {
@@ -34,8 +34,8 @@ namespace CoffeeManagementAPI.Repository
                 .Where(c => c.Revenue >= customerType.BoundaryRevenue && c.Revenue < cusPrev.BoundaryRevenue)
                 .ExecuteUpdateAsync(setter => setter.SetProperty(b => b.CustomerTypeId, customerType.CustomerTypeID));
             }
-            await _context.SaveChangesAsync();
 
+            await _context.SaveChangesAsync();
             return true;
         }
 
@@ -78,6 +78,7 @@ namespace CoffeeManagementAPI.Repository
             }
 
             if(cusType.BoundaryRevenue != customerType.BoundaryRevenue) {
+                
                 var cusPrev = await _context.CustomerTypes.OrderBy(c => c.BoundaryRevenue).Where(c => c.BoundaryRevenue > customerType.BoundaryRevenue && c.CustomerTypeID != id).FirstOrDefaultAsync();
                 if (cusPrev == null)
                 {

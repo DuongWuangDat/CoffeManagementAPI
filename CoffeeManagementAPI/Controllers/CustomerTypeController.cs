@@ -9,7 +9,7 @@ namespace CoffeeManagementAPI.Controllers
 {
     [ApiController]
     [Route("/api/v1/customertype")]
-    [Authorize(Roles ="Admin")]
+   [Authorize(Roles ="Admin")]
     public class CustomerTypeController : ControllerBase
     {
 
