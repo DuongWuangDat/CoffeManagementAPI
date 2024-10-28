@@ -62,7 +62,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
 
-        [HttpDelete("delete")]
+        [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var isSuccess = await _customerTypeRepository.DeleteCustomerType(id);

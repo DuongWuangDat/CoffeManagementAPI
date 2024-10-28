@@ -7,7 +7,7 @@ namespace CoffeeManagementAPI.Interface
     public interface ICustomerRepository
     {
 
-        Task<bool> CreateNewCustomer(Customer customer);
+        Task<(bool,string)> CreateNewCustomer(Customer customer);
 
         Task<(bool,string)> DeleteCustomer(int i);
 

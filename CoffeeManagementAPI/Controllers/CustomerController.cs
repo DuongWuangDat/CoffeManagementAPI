@@ -10,7 +10,7 @@ namespace CoffeeManagementAPI.Controllers
 {
     [ApiController]
     [Route("/api/v1/customer")]
-    [Authorize(Roles ="Admin")]
+   [Authorize(Roles ="Admin")]
     public class CustomerController : ControllerBase
     {
         ICustomerRepository _customerRepository;
@@ -47,10 +47,10 @@ namespace CoffeeManagementAPI.Controllers
 
             var newCus = createCustomerDTO.toCustomerFromCreated();
 
-            var isSuccess = await _customerRepository.CreateNewCustomer(newCus);
+            var (isSuccess, errMsg) = await _customerRepository.CreateNewCustomer(newCus);
             if (!isSuccess)
             {
-                return BadRequest(new ApiError("Something went wrong"));
+                return BadRequest(new ApiError(errMsg));
             }
 
             return Ok(new

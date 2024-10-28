@@ -15,6 +15,7 @@ namespace CoffeeManagementAPI.Mappers.Cus
                 PhoneNumber = customer.PhoneNumber,
                 CustomerType = customer.CustomerType?.toCustomerTypeDTO(),
                 Revenue = customer.Revenue,
+                Email = customer.Email,
             };
         }
 
@@ -26,8 +27,9 @@ namespace CoffeeManagementAPI.Mappers.Cus
             {
                 CustomerName = createCustomerDTO.CustomerName,
                 PhoneNumber = createCustomerDTO.PhoneNumber,
-                CustomerTypeId = null,
-                Revenue = createCustomerDTO.Revenue
+                Revenue = createCustomerDTO.Revenue,
+                Email = createCustomerDTO.Email,
+                
             };
         }
 
@@ -37,6 +39,7 @@ namespace CoffeeManagementAPI.Mappers.Cus
             {
                 CustomerName = updateCustomerDTO.CustomerName,
                 PhoneNumber = updateCustomerDTO.PhoneNumber,
+                Email = updateCustomerDTO.Email,
             };
         }
     }

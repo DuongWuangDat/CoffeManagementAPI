@@ -17,11 +17,21 @@ namespace CoffeeManagementAPI.Repository
             _context = context;
         }
 
-        public async Task<bool> CreateNewCustomer(Customer customer)
+        public async Task<(bool,string)> CreateNewCustomer(Customer customer)
         {
+            var isExist = await _context.Customers.AnyAsync(c=>c.PhoneNumber == customer.PhoneNumber);
+            if (isExist)
+            {
+                return (false, "Phonenumber is existed");
+            }
+            var isEmailExist = await _context.Customers.AnyAsync(c=> c.Email == customer.Email);
+            if (isEmailExist)
+            {
+                return (false, "Email is existed");
+            }
             await _context.Customers.AddAsync(customer);
             await _context.SaveChangesAsync();
-            return true;
+            return (true,"");
         }
 
         public async Task<(bool,string)> DeleteCustomer(int i)
