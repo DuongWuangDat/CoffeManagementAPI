@@ -54,7 +54,7 @@ namespace CoffeeManagementAPI.Repository
             }
             else
             {
-                await _context.CustomerTypes.Where(c=> c.CustomerTypeID == id).ExecuteUpdateAsync(setter=> setter.SetProperty(c=> c.CustomerTypeID, cusAfter.CustomerTypeID));
+                await _context.Customers.Where(c=> c.CustomerTypeId == id).ExecuteUpdateAsync(setter=> setter.SetProperty(c=> c.CustomerTypeId, cusAfter.CustomerTypeID));
                 _context.CustomerTypes.Remove(cusType);
             }
 
