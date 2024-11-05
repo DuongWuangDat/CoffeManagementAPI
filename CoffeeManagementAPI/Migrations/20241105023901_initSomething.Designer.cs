@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoffeeManagementAPI.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20241024142036_dosmth")]
-    partial class dosmth
+    [Migration("20241105023901_initSomething")]
+    partial class initSomething
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -378,12 +378,12 @@ namespace CoffeeManagementAPI.Migrations
                         new
                         {
                             VoucherTypeId = 1,
-                            TypeName = "Theo phần trăm"
+                            TypeName = "Percentage of bill"
                         },
                         new
                         {
                             VoucherTypeId = 2,
-                            TypeName = "Giảm trực tiếp"
+                            TypeName = "Discount directly on invoice"
                         });
                 });
 

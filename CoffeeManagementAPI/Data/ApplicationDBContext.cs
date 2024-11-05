@@ -80,12 +80,12 @@ namespace CoffeeManagementAPI.Data
                 new VoucherType
                 {
                     VoucherTypeId = 1,
-                    TypeName = "Theo phần trăm"
+                    TypeName = "Percentage of bill"
                 },
                 new VoucherType
                 {
                     VoucherTypeId=2,
-                    TypeName = "Giảm trực tiếp"
+                    TypeName = "Discount directly on invoice"
                 }
             };
 

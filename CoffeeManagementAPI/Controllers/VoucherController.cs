@@ -10,7 +10,7 @@ namespace CoffeeManagementAPI.Controllers
 {
     [ApiController]
     [Route("/api/v1/voucher")]
-    [Authorize(Roles ="Admin")]
+     [Authorize(Roles ="Admin")]
     public class VoucherController : ControllerBase
     {
         IVoucherRepository _voucherRepository;
@@ -64,13 +64,16 @@ namespace CoffeeManagementAPI.Controllers
                 return BadRequest(new ApiError("ExpiredDate must be greater than CreatedDate"));
             }
             var newVoucher = createdVoucher.toVoucherFromCreated();
+            Console.WriteLine(newVoucher.VoucherTypeId);
             var isSuccess = await _voucherRepository.CreateNewVoucher(newVoucher);
 
             if (!isSuccess)
             {
                 return BadRequest(new ApiError("Something went wrong")); 
             }
-            return CreatedAtAction(nameof(GetById), new {id = newVoucher.VoucherID}, newVoucher.toVoucherDTO());
+            
+            var voucher = await _voucherRepository.GetVoucherById(newVoucher.VoucherID);
+            return Ok(voucher);
 
         }
 

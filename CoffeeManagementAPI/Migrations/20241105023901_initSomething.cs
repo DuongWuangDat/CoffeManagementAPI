@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CoffeeManagementAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class initSomething : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,8 @@ namespace CoffeeManagementAPI.Migrations
                 {
                     CategoryID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -187,7 +188,7 @@ namespace CoffeeManagementAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Bills", x => x.BillId);
-                    table.CheckConstraint("CK_STATUS_BILL", "[Status] IN ('Đang chờ phục vụ', 'Đã hoàn thành')");
+                    table.CheckConstraint("CK_STATUS_BILL", "Status IN ('Pending', 'Successful')");
                     table.ForeignKey(
                         name: "FK_Bills_Customers_CustomerId",
                         column: x => x.CustomerId,
@@ -246,11 +247,11 @@ namespace CoffeeManagementAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Categories",
-                columns: new[] { "CategoryID", "CategoryName" },
+                columns: new[] { "CategoryID", "CategoryName", "Image" },
                 values: new object[,]
                 {
-                    { 1, "Đồ ăn" },
-                    { 2, "Đồ uống" }
+                    { 1, "Đồ ăn", "" },
+                    { 2, "Đồ uống", "" }
                 });
 
             migrationBuilder.InsertData(
@@ -267,8 +268,8 @@ namespace CoffeeManagementAPI.Migrations
                 columns: new[] { "VoucherTypeId", "TypeName" },
                 values: new object[,]
                 {
-                    { 1, "Theo phần trăm" },
-                    { 2, "Giảm trực tiếp" }
+                    { 1, "Percentage of bill" },
+                    { 2, "Discount directly on invoice" }
                 });
 
             migrationBuilder.CreateIndex(
