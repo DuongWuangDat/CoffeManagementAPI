@@ -58,6 +58,16 @@ namespace CoffeeManagementAPI.Controllers
             });
         }
 
+        [HttpGet("check-token")]
+        [Authorize]
+        public IActionResult CheckIsToken()
+        {
+            return Ok(new
+            {
+                message = "Token is valid"
+            });
+        }
+
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginStaffDTO loginStaff)
         {

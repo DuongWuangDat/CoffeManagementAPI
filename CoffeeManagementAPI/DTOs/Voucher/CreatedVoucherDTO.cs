@@ -23,9 +23,9 @@ namespace CoffeeManagementAPI.DTOs.Voucher
         {
             if(CreatedDate < ExpiredDate)
             {
-                return false;
+                return true;
             }
-            return true;
+            return false;
         }
 
 
