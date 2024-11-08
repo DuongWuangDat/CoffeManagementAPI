@@ -9,7 +9,7 @@ namespace CoffeeManagementAPI.Interface
         Task<bool> CreateNewVoucher(Voucher newVoucher);
         Task<bool> DeleteVoucher(int id);
 
-        Task<(bool, Voucher?)> UpdateVoucher(Voucher voucher, int id);
+        Task<(bool, Voucher?, string)> UpdateVoucher(Voucher voucher, int id);
 
         Task<List<VoucherDTO>> GetAllVoucher();
 
@@ -17,6 +17,10 @@ namespace CoffeeManagementAPI.Interface
 
 
         Task<VoucherDTO?> GetVoucherByCode(string code);
+
+        Task<(bool,string)> DeleteManyVoucher(IEnumerable<int> setOfVoucherId);
+
+
 
     }
 }

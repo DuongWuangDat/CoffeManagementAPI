@@ -4,6 +4,7 @@ using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Mappers.VoucherMapper;
 using CoffeeManagementAPI.Model;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace CoffeeManagementAPI.Repository
 {
@@ -20,6 +21,22 @@ namespace CoffeeManagementAPI.Repository
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<(bool, string)> DeleteManyVoucher(IEnumerable<int> setOfVoucherId)
+        {
+            if (setOfVoucherId == null)
+            {
+                return (false, "setOfVoucherId is not null");
+            }
+            
+            var voucherList = await _context.Vouchers.Where(v=> setOfVoucherId.Contains(v.VoucherID)).ToListAsync();
+            foreach(Voucher voucher in voucherList)
+            {
+                _context.Remove(voucher);
+            }
+            await _context.SaveChangesAsync();
+            return (true, "");
         }
 
         public async Task<bool> DeleteVoucher(int id)
@@ -66,16 +83,16 @@ namespace CoffeeManagementAPI.Repository
             return voucher.toVoucherDTO();
         }
 
-        public async Task<(bool,Voucher?)> UpdateVoucher(Voucher voucher, int id)
+        public async Task<(bool,Voucher?, string)> UpdateVoucher(Voucher voucher, int id)
         {
             var vouch = await _context.Vouchers.FirstOrDefaultAsync(p=> p.VoucherID ==  id);
             if (vouch == null)
             {
-                return (false, null);
+                return (false, null, "Voucher is not found");
             }
             if(vouch.CreatedDate > voucher.ExpiredDate)
             {
-                return (false, null);
+                return (false, null,"Expired date must be greater than created date");
             }
 
             vouch.ExpiredDate = voucher.ExpiredDate;
@@ -86,7 +103,7 @@ namespace CoffeeManagementAPI.Repository
 
             await _context.SaveChangesAsync();
 
-            return (true, vouch);
+            return (true, vouch, "");
            
             
         }

@@ -10,7 +10,7 @@ namespace CoffeeManagementAPI.Controllers
 {
     [ApiController]
     [Route("/api/v1/voucher")]
-     [Authorize(Roles ="Admin")]
+  [Authorize(Roles ="Admin")]
     public class VoucherController : ControllerBase
     {
         IVoucherRepository _voucherRepository;
@@ -94,11 +94,11 @@ namespace CoffeeManagementAPI.Controllers
         public async Task<IActionResult> UpdateVoucher([FromRoute] int id, [FromBody] UpdatedVoucherDTO updatedVoucherDTO)
         {
 
-            var (isSuccess, newVoucher) = await _voucherRepository.UpdateVoucher(updatedVoucherDTO.toVoucherFromUpdated(), id);
+            var (isSuccess, newVoucher, errMSg) = await _voucherRepository.UpdateVoucher(updatedVoucherDTO.toVoucherFromUpdated(), id);
 
             if (!isSuccess)
             {
-                return BadRequest(new ApiError("Voucher is not found"));
+                return BadRequest(new ApiError(errMSg));
             }
 
             return Ok(new
@@ -108,6 +108,23 @@ namespace CoffeeManagementAPI.Controllers
             });
 
 
+        }
+
+        [HttpDelete("deleteMany")]
+        public async Task<IActionResult> DeleteMany([FromQuery] string setOfVoucherId)
+        {
+            string[] listVoucher = setOfVoucherId.Split(",");
+            int[] listIntVoucher = Array.ConvertAll(listVoucher,int.Parse);
+            var (isSuccess, msg)= await _voucherRepository.DeleteManyVoucher(listIntVoucher);
+            if (!isSuccess)
+            {
+                return BadRequest(new ApiError(msg));
+            }
+
+            return Ok(new
+            {
+                message = "Deleted successfully"
+            });
         }
 
     }
