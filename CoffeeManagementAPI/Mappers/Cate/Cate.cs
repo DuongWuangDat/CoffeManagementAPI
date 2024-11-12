@@ -12,7 +12,7 @@ namespace CoffeeManagementAPI.Mappers.Cate
             {
                 CategoryID = category.CategoryID,
                 CategoryName = category.CategoryName,
-
+                Image = category.Image,
             };
         }
 

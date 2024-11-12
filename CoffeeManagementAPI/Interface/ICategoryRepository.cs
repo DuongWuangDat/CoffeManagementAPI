@@ -12,5 +12,7 @@ namespace CoffeeManagementAPI.Interface
 
         Task<(bool, string)> DeleteCategory(int id);
 
+        Task<(bool, string)> UpdateCategory(int id, Category category);
+
     }
 }

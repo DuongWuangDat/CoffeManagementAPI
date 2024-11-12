@@ -59,6 +59,22 @@ namespace CoffeeManagementAPI.Controllers
             });
         }
 
+        [HttpPut("update/{id:int}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] CreateCategoryDTO createCategoryDTO)
+        {
+            var category = createCategoryDTO.toCategoryFromCreate();
+            Console.WriteLine(category.Image);
+            var (isSuccess, errMsg) = await _categoryRepository.UpdateCategory(id, category);
+            if(!isSuccess)
+            {
+                return BadRequest(new ApiError(errMsg));
+            }
+
+            return Ok(new
+            {
+                message = "Update successfully"
+            });
+        }
 
     }
 }

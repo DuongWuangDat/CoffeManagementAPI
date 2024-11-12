@@ -46,5 +46,18 @@ namespace CoffeeManagementAPI.Repository
 
             return cateList;
         }
+
+        public async Task<(bool, string)> UpdateCategory(int id, Category category)
+        {
+            var oldCate = await _context.Categories.Where(c => c.CategoryID == id).FirstOrDefaultAsync();
+            if(oldCate == null)
+            {
+                return (false, "Category is not found");
+            }
+            oldCate.CategoryName = category.CategoryName;
+            oldCate.Image = category.Image;
+            await _context.SaveChangesAsync();
+            return (true, "");
+        }
     }
 }
