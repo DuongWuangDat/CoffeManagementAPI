@@ -10,7 +10,7 @@ namespace CoffeeManagementAPI.Controllers
 {
     [ApiController]
     [Route("/api/v1/customer")]
-   [Authorize(Roles ="Admin")]
+    [Authorize]
     public class CustomerController : ControllerBase
     {
         ICustomerRepository _customerRepository;
@@ -20,6 +20,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpGet("getall")]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> GetAll()
         {
 
@@ -28,6 +29,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpGet("getbyid/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetById( [FromRoute] int id)
         {
 
@@ -41,6 +43,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] CreateCustomerDTO createCustomerDTO)
         {
 
@@ -61,6 +64,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpDelete("delete/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteById ([FromRoute] int id)
         {
 
@@ -78,6 +82,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpPut("update/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateById([FromRoute] int id, [FromBody] UpdateCustomerDTO updateCustomerDTO)
         {
             var (isSuccess, newCus) = await _customerRepository.UpadateCustomer(updateCustomerDTO.toCustomerFromUpdated(), id);

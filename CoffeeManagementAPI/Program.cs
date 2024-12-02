@@ -65,7 +65,6 @@ builder.Services.AddDbContext<ApplicationDBContext>(option =>
 
 
 
-
 builder.Services.AddAuthentication(option =>
 {
     option.DefaultAuthenticateScheme =
@@ -74,6 +73,7 @@ builder.Services.AddAuthentication(option =>
     option.DefaultChallengeScheme =
     option.DefaultSignOutScheme =
     option.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+    
 }).AddJwtBearer(option =>
 {
     option.TokenValidationParameters = new TokenValidationParameters
@@ -95,7 +95,7 @@ builder.Services.AddAuthentication(option =>
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             context.Response.ContentType = "application/json";
-
+            
             var err = new
             {
                 message = "Authentication is failed",
@@ -138,7 +138,9 @@ builder.Services.AddScoped<IPayTypeRepository, PayTypeRepository>();
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 builder.Services.AddScoped<ISendMailService, SendEmailService>();
 builder.Services.AddScoped<ICustomerTypeRepository, CustomerTypeRepository>();
-
+builder.Services.AddScoped<IFeedBackRepository, FeedBackRepository>();
+builder.Services.AddScoped<IFloorRepository, FloorRepository>();
+builder.Services.AddScoped<ITableRepository, TableRepository>();
 
 var app = builder.Build();
 
@@ -178,7 +180,6 @@ else
         });
     });
 }
-
 
 
 app.UseHttpsRedirection();

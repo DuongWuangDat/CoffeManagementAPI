@@ -47,7 +47,6 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpPost("create")]
-        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Create([FromBody] CreatedBillDTO createdBillDTO)
         {
             

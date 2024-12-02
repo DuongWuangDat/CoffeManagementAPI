@@ -20,7 +20,7 @@ namespace CoffeeManagementAPI.Controllers
         [HttpGet("getrevenue")]
         public async Task<IActionResult> GetRevenue([FromQuery] ReportRevenueInput report)
         {
-            if(report.start < report.end)
+            if(report.start >= report.end)
             {
                 return BadRequest(new ApiError("Start date must be before end date"));
             }
@@ -48,7 +48,7 @@ namespace CoffeeManagementAPI.Controllers
 
         public async Task<IActionResult> GetProductReport([FromQuery] ReportRevenueInput reportRevenueInput)
         {
-            if(reportRevenueInput.start < reportRevenueInput.end)
+            if(reportRevenueInput.start >= reportRevenueInput.end)
             {
                 return BadRequest(new ApiError("Start date must be before end date"));
             }
@@ -61,7 +61,7 @@ namespace CoffeeManagementAPI.Controllers
         [HttpGet("gettotalorder")]
         public async Task<IActionResult> GetOrderTotal([FromQuery] ReportRevenueInput reportRevenueInput)
         {
-            if (reportRevenueInput.start < reportRevenueInput.end)
+            if (reportRevenueInput.start >= reportRevenueInput.end)
             {
                 return BadRequest(new ApiError("Start date must be before end date"));
             }
@@ -74,7 +74,7 @@ namespace CoffeeManagementAPI.Controllers
         [HttpGet("getreportbill")]
         public async Task<IActionResult> GetReportBill([FromQuery] ReportRevenueInput reportRevenueInput)
         {
-            if (reportRevenueInput.start < reportRevenueInput.end)
+            if (reportRevenueInput.start >= reportRevenueInput.end)
             {
                 return BadRequest(new ApiError("Start date must be before end date"));
             }

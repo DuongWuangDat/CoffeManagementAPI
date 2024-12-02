@@ -10,7 +10,7 @@ namespace CoffeeManagementAPI.Controllers
 {
     [ApiController]
     [Route("/api/v1/voucher")]
-  [Authorize(Roles ="Admin")]
+    [Authorize(Roles ="Admin")]
     public class VoucherController : ControllerBase
     {
         IVoucherRepository _voucherRepository;

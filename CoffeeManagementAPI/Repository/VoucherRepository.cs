@@ -62,7 +62,7 @@ namespace CoffeeManagementAPI.Repository
 
         public async Task<VoucherDTO?> GetVoucherByCode(string code)
         {
-            var voucher = await _context.Vouchers.FirstOrDefaultAsync(v=> v.VoucherCode == code && v.ExpiredDate >= DateTime.Now);
+            var voucher = await _context.Vouchers.Include(v=>v.VoucherType).FirstOrDefaultAsync(v=> v.VoucherCode == code && v.ExpiredDate >= DateTime.Now && v.MaxApply>0);
 
             if (voucher == null)
             {

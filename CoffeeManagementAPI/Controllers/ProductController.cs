@@ -12,7 +12,7 @@ namespace CoffeeManagementAPI.Controllers
 {
     [ApiController]
     [Route("/api/v1/product")]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         IProductRepository _productRepository;
@@ -48,6 +48,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductDTO createProductDTO)
         {
             var newProduct = createProductDTO.toProductFromCreate();
@@ -64,6 +65,7 @@ namespace CoffeeManagementAPI.Controllers
 
 
         [HttpPut("update/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProduct([FromBody] CreateProductDTO newProductDTO, [FromRoute] int id)
         {
             var newProduct = newProductDTO.toProductFromCreate();
@@ -81,6 +83,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpDelete("delete/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
 
@@ -97,6 +100,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpGet("getproductbycategory/{categoryId:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetByCategory([FromRoute] int categoryId)
         {
 
@@ -106,6 +110,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpGet("paginate")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetPaginate([FromQuery] PaginationObject pagination)
         {
             

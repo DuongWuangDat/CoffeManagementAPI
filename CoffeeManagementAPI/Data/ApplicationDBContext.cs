@@ -22,6 +22,14 @@ namespace CoffeeManagementAPI.Data
         public DbSet<BillDetail> BillDetails { get; set; }
         public DbSet<Staff> Staff { get; set; }
         public DbSet<Token> Tokens { get; set; }
+
+        public DbSet<Feedback> Feedbacks { get; set; }
+
+        public DbSet<Floor> Floors { get; set; }
+
+        public DbSet<Table> Tables { get; set; }
+
+        public DbSet<BookingTable> BookingTables { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -30,14 +38,18 @@ namespace CoffeeManagementAPI.Data
             modelBuilder.Entity<Bill>().Property(p => p.Status).HasDefaultValue("Chưa thanh toán");
             modelBuilder.Entity<Bill>().ToTable(t=> t.HasCheckConstraint("CK_STATUS_BILL", "Status IN ('Pending', 'Successful')"));
             modelBuilder.Entity<Voucher>().ToTable(t => t.HasCheckConstraint("CK_VOUCHER_DATE", "[CreatedDate] < [ExpiredDate]"));
-
+            modelBuilder.Entity<Table>().ToTable(t => t.HasCheckConstraint("CK_TABLE_STATUS", "Status IN ('Booked', 'Not booked', 'Under repair')"));
+            modelBuilder.Entity<Table>().HasIndex(p=>p.TableNumber).IsUnique();
+            
 
             //Set on delete
 
-            List<Type> casadeEntity = new List<Type>
+            List<Type> restrictEntity = new List<Type>
             {
                 typeof(Bill)
             };
+
+            List<Type> casadeEntity = new List<Type> { typeof(Table), typeof(Floor) };
 
             foreach(var entityType in modelBuilder.Model.GetEntityTypes())
             {
@@ -46,9 +58,13 @@ namespace CoffeeManagementAPI.Data
                 foreach(var foreginKey in foreginKeys)
                 {
                     
-                    if (casadeEntity.Contains(foreginKey.PrincipalEntityType.ClrType))
+                    if (restrictEntity.Contains(foreginKey.PrincipalEntityType.ClrType))
                     {
                         foreginKey.DeleteBehavior = DeleteBehavior.Restrict;
+                    }
+                    else if (casadeEntity.Contains(foreginKey.PrincipalEntityType.ClrType))
+                    {
+                        foreginKey.DeleteBehavior = DeleteBehavior.Cascade;
                     }
                     else
                     {
