@@ -141,6 +141,7 @@ builder.Services.AddScoped<ICustomerTypeRepository, CustomerTypeRepository>();
 builder.Services.AddScoped<IFeedBackRepository, FeedBackRepository>();
 builder.Services.AddScoped<IFloorRepository, FloorRepository>();
 builder.Services.AddScoped<ITableRepository, TableRepository>();
+builder.Services.AddScoped<ITableTypeRepository, TableTypeRepository>();
 
 var app = builder.Build();
 

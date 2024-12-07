@@ -11,6 +11,10 @@ namespace CoffeeManagementAPI.Model
 
         public int TableNumber {  get; set; }
 
+        public int? TableTypeId { get; set; }
+
+        public TableType? TableType { get; set; }
+
         public int FloorId { get; set; }
 
         public Floor? Floor { get; set; }

@@ -1,4 +1,5 @@
-﻿using CoffeeManagementAPI.Data;
+﻿
+using CoffeeManagementAPI.Data;
 using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Model;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +36,7 @@ namespace CoffeeManagementAPI.Repository
 
         public async Task<IEnumerable<Floor>> GetAllFloor()
         {
-            var floorList = await _context.Floors.Include(f=> f.Tables).ToListAsync();
+            var floorList = await _context.Floors.Include(f=> f.Tables).ThenInclude(t=> t.TableType).ToListAsync();
             return floorList;
         }
     }

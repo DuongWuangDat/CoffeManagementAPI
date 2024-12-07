@@ -8,6 +8,8 @@ namespace CoffeeManagementAPI.Interface
     {
         Task<IEnumerable<TableDTO>> GetTables();
         Task<IEnumerable<TableDTO>> GetTableByFloorID(int floorID);
+
+        Task<IEnumerable<TableDTO>> GetTableByType(int tableType);
         Task<(bool, string)> CreateNewTable(Table newTable);
 
         Task<(bool, string)> DeleteTable(int id);

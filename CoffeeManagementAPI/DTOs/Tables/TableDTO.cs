@@ -9,9 +9,13 @@ namespace CoffeeManagementAPI.DTOs.Tables
 
         public int TableNumber { get; set; }
 
+        public int? TableTypeID { get; set; }
+
+        public TableType? TableType { get; set; }
+
         public int FloorId { get; set; }
 
-        public Floor? Floor { get; set; }
+        public FloorDTO? Floor { get; set; }
 
         public string Status { get; set; }
 

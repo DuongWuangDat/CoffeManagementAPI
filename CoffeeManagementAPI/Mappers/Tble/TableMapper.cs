@@ -19,12 +19,13 @@ namespace CoffeeManagementAPI.Mappers.Tble
         {
             return new()
             {
-                Floor = table.Floor,
+                Floor = table.Floor.toFloorDTO(),
                 FloorId = table.FloorId,
                 Status = table.Status,
                 TableID = table.TableID,
                 TableNumber = table.TableNumber,
-
+                TableType = table.TableType,
+                TableTypeID = table.TableTypeId,
             };
         }
 
@@ -34,6 +35,7 @@ namespace CoffeeManagementAPI.Mappers.Tble
             {
                 TableNumber = createTableDTO.TableNumber,
                 FloorId = createTableDTO.FloorId,
+                TableTypeId = createTableDTO.TableTypeID,
                 
             };
         }

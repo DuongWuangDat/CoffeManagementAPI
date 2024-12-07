@@ -30,17 +30,19 @@ namespace CoffeeManagementAPI.Data
         public DbSet<Table> Tables { get; set; }
 
         public DbSet<BookingTable> BookingTables { get; set; }
+
+        public DbSet<TableType> TableTypes { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<CustomerType>().HasIndex(p => p.BoundaryRevenue).IsUnique();
-            modelBuilder.Entity<Staff>().HasIndex(p=> p.Username).IsUnique();
+            modelBuilder.Entity<Staff>().HasIndex(p => p.Username).IsUnique();
             modelBuilder.Entity<Bill>().Property(p => p.Status).HasDefaultValue("Chưa thanh toán");
-            modelBuilder.Entity<Bill>().ToTable(t=> t.HasCheckConstraint("CK_STATUS_BILL", "Status IN ('Pending', 'Successful')"));
+            modelBuilder.Entity<Bill>().ToTable(t => t.HasCheckConstraint("CK_STATUS_BILL", "Status IN ('Pending', 'Successful')"));
             modelBuilder.Entity<Voucher>().ToTable(t => t.HasCheckConstraint("CK_VOUCHER_DATE", "[CreatedDate] < [ExpiredDate]"));
             modelBuilder.Entity<Table>().ToTable(t => t.HasCheckConstraint("CK_TABLE_STATUS", "Status IN ('Booked', 'Not booked', 'Under repair')"));
-            modelBuilder.Entity<Table>().HasIndex(p=>p.TableNumber).IsUnique();
-            
+            modelBuilder.Entity<Table>().HasIndex(p => p.TableNumber).IsUnique();
+
 
             //Set on delete
 
@@ -49,15 +51,15 @@ namespace CoffeeManagementAPI.Data
                 typeof(Bill)
             };
 
-            List<Type> casadeEntity = new List<Type> { typeof(Table), typeof(Floor) };
+            List<Type> casadeEntity = new List<Type> { typeof(Table), typeof(Floor), typeof(TableType) };
 
-            foreach(var entityType in modelBuilder.Model.GetEntityTypes())
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 var foreginKeys = entityType.GetForeignKeys();
 
-                foreach(var foreginKey in foreginKeys)
+                foreach (var foreginKey in foreginKeys)
                 {
-                    
+
                     if (restrictEntity.Contains(foreginKey.PrincipalEntityType.ClrType))
                     {
                         foreginKey.DeleteBehavior = DeleteBehavior.Restrict;
@@ -70,10 +72,10 @@ namespace CoffeeManagementAPI.Data
                     {
                         foreginKey.DeleteBehavior = DeleteBehavior.SetNull;
                     }
-                   
+
                 }
             }
-            
+
 
 
 
@@ -119,11 +121,39 @@ namespace CoffeeManagementAPI.Data
                 }
             };
 
+            List<TableType> tableTypes = new List<TableType>
+            {
+                new()
+                {
+                    TableTypeID = 1,
+                    TableNameType = "1 person"
+                },
+                new()
+                {
+                    TableTypeID=2,
+                    TableNameType= "2 people"
+                },
+                new()
+                {
+                    TableTypeID=3,
+                    TableNameType= "4 people"
+                },
+                new()
+                {
+                    TableTypeID=4,
+                    TableNameType= "6 people"
+                }
+            };
 
             modelBuilder.Entity<Category>().HasData(categories);
             modelBuilder.Entity<VoucherType>().HasData(voucherTypes);
             modelBuilder.Entity<PayType>().HasData(payTypes);
+            modelBuilder.Entity<TableType>().HasData(tableTypes);
 
+
+            //Ignore
+           // modelBuilder.Entity<Floor>().Ignore(f=> f.Tables);
+            modelBuilder.Entity<TableType>().Ignore(f=> f.Tables);
         }
     }
 }

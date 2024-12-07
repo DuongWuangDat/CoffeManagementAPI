@@ -56,6 +56,10 @@ namespace CoffeeManagementAPI.Repository
             {
                 return (false, "Table is not found");
             }
+            if(table.Status == "Booked")
+            {
+                return (false, "End this table before deleting it");
+            }
             _context.Tables.Remove(table);
             await _context.SaveChangesAsync();
             return (true, "");
@@ -94,13 +98,19 @@ namespace CoffeeManagementAPI.Repository
 
         public async Task<IEnumerable<TableDTO>> GetTableByFloorID(int floorID)
         {
-            var tables = await _context.Tables.Where(t=> t.FloorId == floorID).Select(t => t.toTableDTO()).ToListAsync();
+            var tables = await _context.Tables.Where(t=> t.FloorId == floorID).Include(t=> t.Floor).Include(s=> s.TableType).Select(t => t.toTableDTO()).ToListAsync();
+            return tables;
+        }
+
+        public async Task<IEnumerable<TableDTO>> GetTableByType(int tableType)
+        {
+            var tables = await _context.Tables.Where(t => t.TableTypeId == tableType).Include(t => t.Floor).Include(s => s.TableType).Select(t => t.toTableDTO()).ToListAsync();
             return tables;
         }
 
         public async Task<IEnumerable<TableDTO>> GetTables()
         {
-            var tables = await _context.Tables.Select(t=> t.toTableDTO()).ToListAsync();
+            var tables = await _context.Tables.Include(t=> t.Floor).Include(t=> t.TableType).Select(t=> t.toTableDTO()).ToListAsync();
             return tables;
         }
 
@@ -139,7 +149,7 @@ namespace CoffeeManagementAPI.Repository
             
             table.TableNumber = newTable.TableNumber;
             table.FloorId = newTable.FloorId;
-            
+            table.TableTypeId = newTable.TableTypeID;
             await _context.SaveChangesAsync();
             if (flag)
             {

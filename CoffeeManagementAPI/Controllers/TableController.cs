@@ -31,6 +31,14 @@ namespace CoffeeManagementAPI.Controllers
             var tables =await _tableRepository.GetTableByFloorID(floorId);
             return Ok(tables);
         }
+
+        [HttpGet("getTableByType/{typeId:int}")]
+        public async Task<IActionResult> GetTableByType([FromRoute] int typeId)
+        {
+            var tables = await _tableRepository.GetTableByType(typeId);
+            return Ok(tables);
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> CreateTable([FromBody] CreateTableDTO createTableDTO)
         {
@@ -65,6 +73,10 @@ namespace CoffeeManagementAPI.Controllers
         [HttpPut("update/{id:int}")]
         public async Task<IActionResult> UpdateTable([FromBody] UpdateTableDTO updateTableDTO, [FromRoute] int id)
         {
+            if (!updateTableDTO.isStatucCorrect())
+            {
+                return BadRequest(new ApiError("Status must be in Not booked, Booked or Under repair"));
+            }
             var (isSuccess, msg) = await _tableRepository.UpdateTable(updateTableDTO, id);
             if(!isSuccess)
             {
@@ -80,6 +92,10 @@ namespace CoffeeManagementAPI.Controllers
         [HttpPut("updateStatus/{id:int}")]
         public async Task<IActionResult> UpdateStatusTable([FromRoute] int id, [FromBody] UpdateStatusTableDTO updateStatusTableDTO)
         {
+            if (!updateStatusTableDTO.isStatucCorrect())
+            {
+                return BadRequest(new ApiError("Status must be in Not booked, Booked or Under repair"));
+            }
             var (isSuccess, msg) = await _tableRepository.UpdateStatusTable(updateStatusTableDTO, id);
             if (!isSuccess)
             {
