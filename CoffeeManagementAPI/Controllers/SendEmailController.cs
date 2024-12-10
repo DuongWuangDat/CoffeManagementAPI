@@ -33,5 +33,44 @@ namespace CoffeeManagementAPI.Controllers
 
         }
 
+        [HttpPost("sendmany")]
+        public async Task<IActionResult> SendManyEmail([FromBody] SendManyEmialDTO sendManyEmialDTO)
+        {
+            var listEmail = sendManyEmialDTO.listEmail;
+            var listVoucher = sendManyEmialDTO.listVoucher;
+            List<EmailResult> emailResult = new List<EmailResult>();
+            if(listVoucher.Length != listEmail.Length)
+            {
+                return BadRequest(new ApiError("List of email's length must be equal with list of voucher's length"));
+            }
+            for( int i=0; i<listEmail.Length; i++)
+            {
+                var (isSuccess, err) = await _sendMailService.SendMail(listEmail[i], listVoucher[i]);
+                if (!isSuccess)
+                {
+                    emailResult.Add(new()
+                    {
+                        Email = listEmail[i],
+                        ErrorMsg = err.ToString(),
+                        Success = false,
+                    });
+                }
+                else
+                {
+                    emailResult.Add(new()
+                    {
+                        Email = listEmail[i],
+                        ErrorMsg = "",
+                        Success = true,
+                    });
+                }
+            }
+
+            return Ok(new
+            {
+                results= emailResult.ToArray(),
+            });
+        }
+
     }
 }

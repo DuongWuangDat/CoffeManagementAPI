@@ -12,7 +12,5 @@ namespace CoffeeManagementAPI.DTOs.Tables
         [Required]
         public int TableTypeID { get; set; }
 
-        [Required]
-        public string Status { get; set; }
     }
 }

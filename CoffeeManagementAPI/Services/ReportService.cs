@@ -1,6 +1,7 @@
 ﻿using CoffeeManagementAPI.Data;
 using CoffeeManagementAPI.DTOs.Report;
 using CoffeeManagementAPI.Interface;
+using CoffeeManagementAPI.Mappers.Prod;
 using CoffeeManagementAPI.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -26,9 +27,9 @@ namespace CoffeeManagementAPI.Services
                 .GroupBy(b => b.ProductId)
                 .Select(s => new ReportProductRecord
                 {
-                    CategoryName = s.First().Product.Category.CategoryName,
+                    Product= s.First().Product.toProdDTO(),
                     OrderCount = s.Sum(o => o.ProductCount),
-                    ProductName = s.First().ProductName
+                   
                 }).ToListAsync();
 
             return productQuery;

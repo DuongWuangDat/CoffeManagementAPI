@@ -42,6 +42,8 @@ namespace CoffeeManagementAPI.Data
             modelBuilder.Entity<Voucher>().ToTable(t => t.HasCheckConstraint("CK_VOUCHER_DATE", "[CreatedDate] < [ExpiredDate]"));
             modelBuilder.Entity<Table>().ToTable(t => t.HasCheckConstraint("CK_TABLE_STATUS", "Status IN ('Booked', 'Not booked', 'Under repair')"));
             modelBuilder.Entity<Table>().HasIndex(p => p.TableNumber).IsUnique();
+            modelBuilder.Entity<Floor>().HasIndex(p=> p.FloorNumber).IsUnique();
+            modelBuilder.Entity<TableType>().HasIndex(p=>p.TableNameType).IsUnique();
 
 
             //Set on delete
