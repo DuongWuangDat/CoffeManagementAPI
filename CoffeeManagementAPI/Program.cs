@@ -128,8 +128,7 @@ builder.Services.AddCors(options =>
     {
         p.WithOrigins("http://localhost:3000")
         .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials();
+        .AllowAnyHeader();
     });
 });
 
@@ -195,15 +194,13 @@ else
 
 app.UseHttpsRedirection();
 
-
-
-app.MapControllers();
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 
 
 app.UseAuthorization();
 
-app.UseCors("AllowAll");
+app.MapControllers();
 
 app.Run();
