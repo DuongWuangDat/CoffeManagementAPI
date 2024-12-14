@@ -94,7 +94,7 @@ namespace CoffeeManagementAPI.Services
 
         public async Task<ReportRecordRevenue> GetRevenueByDate(DateTime date)
         {
-            var totalRevenue = await _context.Bills.Where(b => b.DateTime == date).SumAsync(s => s.TotalPrice);
+            var totalRevenue = await _context.Bills.Where(b => b.DateTime.Date == date.Date).SumAsync(s => s.TotalPrice);
 
             var revenueRecord = new ReportRecordRevenue
             {

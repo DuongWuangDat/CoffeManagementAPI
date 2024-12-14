@@ -122,6 +122,16 @@ builder.Services.AddAuthentication(option =>
     };
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", (p) =>
+    {
+        p.WithOrigins("http://localhost:3000")
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials();
+    });
+});
 
 
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -194,10 +204,6 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.UseCors(x =>
-    x.AllowAnyHeader()
-    .AllowAnyMethod()
-    .WithOrigins("*")
-    );
+app.UseCors("AllowAll");
 
 app.Run();

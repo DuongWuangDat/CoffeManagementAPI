@@ -87,5 +87,20 @@ namespace CoffeeManagementAPI.Repository
             return (true,prod);
 
         }
+
+        public async Task<(bool, string)> UpdateProductSoldOut(bool newSoldOut, int id)
+        {
+            var prod = await _context.Products.FirstOrDefaultAsync(p=> p.ProductID==id);
+            if(prod == null)
+            {
+                return (false, "Product is not found");
+            }
+
+            prod.IsSoldOut = newSoldOut;
+
+            await _context.SaveChangesAsync();
+
+            return (true, "");
+        }
     }
 }

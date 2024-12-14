@@ -43,29 +43,36 @@ namespace CoffeeManagementAPI.Controllers
             {
                 return BadRequest(new ApiError("List of email's length must be equal with list of voucher's length"));
             }
+            List<Task> tasks = new List<Task>();
             for( int i=0; i<listEmail.Length; i++)
             {
-                var (isSuccess, err) = await _sendMailService.SendMail(listEmail[i], listVoucher[i]);
-                if (!isSuccess)
+                var index = i;
+                var task = Task.Run( async () =>
                 {
-                    emailResult.Add(new()
+                    var (isSuccess, err) = await _sendMailService.SendMail(listEmail[index], listVoucher[index]);
+                    Console.WriteLine(index);
+                    if (!isSuccess)
                     {
-                        Email = listEmail[i],
-                        ErrorMsg = err.ToString(),
-                        Success = false,
-                    });
-                }
-                else
-                {
-                    emailResult.Add(new()
+                        emailResult.Add(new()
+                        {
+                            Email = listEmail[index],
+                            ErrorMsg = err.ToString(),
+                            Success = false,
+                        });
+                    }
+                    else
                     {
-                        Email = listEmail[i],
-                        ErrorMsg = "",
-                        Success = true,
-                    });
-                }
+                        emailResult.Add(new()
+                        {
+                            Email = listEmail[index],
+                            ErrorMsg = "",
+                            Success = true,
+                        });
+                    }
+                });
+                tasks.Add(task);
             }
-
+            await Task.WhenAll(tasks);
             return Ok(new
             {
                 results= emailResult.ToArray(),

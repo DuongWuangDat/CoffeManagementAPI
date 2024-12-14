@@ -119,6 +119,20 @@ namespace CoffeeManagementAPI.Controllers
             return Ok(prodList);
 
         }
-
+     
+        [HttpPost("updatesoldout/{id:int}")]
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<IActionResult> UpdateSoldOut([FromBody] UpdateProductSoldOutDTO updateProduct, [FromRoute] int id)
+        {
+            var (isSuccess, errMsg) = await _productRepository.UpdateProductSoldOut(updateProduct.isSoldOut, id);
+            if (!isSuccess)
+            {
+                return BadRequest(new ApiError($"{errMsg}"));
+            }
+            return Ok(new
+            {
+                message = "Update successfully"
+            });
+        }
     }
 }

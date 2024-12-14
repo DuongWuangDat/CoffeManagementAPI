@@ -11,6 +11,8 @@ namespace CoffeeManagementAPI.Interface
 
         Task<(bool,Product?)> UpdateProduct(Product newProduct, int id);
 
+        Task<(bool, string)> UpdateProductSoldOut(bool newSoldOut, int id);
+
         Task<bool> DeleteProduct(int id);
 
         Task<List<ProductDTO>> GetAllProduct();
