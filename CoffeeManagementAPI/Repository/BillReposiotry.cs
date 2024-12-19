@@ -19,12 +19,13 @@ namespace CoffeeManagementAPI.Repository
         {
             if (bill.VoucherId !=null)
             {
-                var voucher = await _context.Vouchers.FirstOrDefaultAsync(v => v.VoucherID == bill.VoucherId);
+                var voucher = await _context.Vouchers.FirstOrDefaultAsync(v => v.VoucherID == bill.VoucherId && v.MaxApply>0);
 
                 if (voucher == null)
                 {
                     return (false,"VoucherID is not found");
                 }
+                voucher.MaxApply = voucher.MaxApply - 1;
 
                 bill.VoucherValue = voucher.VoucherValue;
                 bill.VoucherTypeIndex = (int)voucher.VoucherTypeId;
@@ -67,14 +68,14 @@ namespace CoffeeManagementAPI.Repository
 
         public async Task<List<BillDTO>> GetAllBill()
         {
-            var billList = await _context.Bills.Include(b=> b.BillDetails).Select(b => b.toBillDTO()).ToListAsync();
+            var billList = await _context.Bills.Include(b=> b.BillDetails).Include(b => b.Customer).Include(b => b.Staff).Include(b => b.PayType).Select(b => b.toBillDTO()).ToListAsync();
            
             return billList;
         }
 
         public async Task<BillDTO?> GetBillById(int id)
         {
-            var bill = await _context.Bills.Include(b=> b.BillDetails).FirstOrDefaultAsync(b => b.BillId == id);
+            var bill = await _context.Bills.Include(b=> b.BillDetails).Include(b => b.Customer).Include(b => b.Staff).Include(b => b.PayType).FirstOrDefaultAsync(b => b.BillId == id);
             if(bill == null)
             {
                 return null;
@@ -85,7 +86,7 @@ namespace CoffeeManagementAPI.Repository
 
         public async Task<List<BillDTO>> GetBillPagination(PaginationObject pagination)
         {
-            var billSelectable = _context.Bills.Include(b => b.BillDetails).Select(b => b.toBillDTO()).AsQueryable();
+            var billSelectable = _context.Bills.Include(b => b.BillDetails).Include(b=> b.Customer).Include(b=> b.Staff).Include(b=>b.PayType).Select(b => b.toBillDTO()).AsQueryable();
             var billList = await billSelectable.Skip(pagination.pageSize* (pagination.page-1)).Take(pagination.pageSize).ToListAsync();
 
             return billList;

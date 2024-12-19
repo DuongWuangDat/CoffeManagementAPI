@@ -39,38 +39,42 @@ namespace CoffeeManagementAPI.Controllers
             var listEmail = sendManyEmialDTO.listEmail;
             var listVoucher = sendManyEmialDTO.listVoucher;
             List<EmailResult> emailResult = new List<EmailResult>();
-            if(listVoucher.Length != listEmail.Length)
-            {
-                return BadRequest(new ApiError("List of email's length must be equal with list of voucher's length"));
-            }
             List<Task> tasks = new List<Task>();
+            
             for( int i=0; i<listEmail.Length; i++)
             {
                 var index = i;
-                var task = Task.Run( async () =>
+                foreach (string voucher in listVoucher)
                 {
-                    var (isSuccess, err) = await _sendMailService.SendMail(listEmail[index], listVoucher[index]);
-                    Console.WriteLine(index);
-                    if (!isSuccess)
+                    var task = Task.Run(async () =>
                     {
-                        emailResult.Add(new()
+                        var (isSuccess, err) = await _sendMailService.SendMail(listEmail[index], voucher);
+                        Console.WriteLine(index);
+                        if (!isSuccess)
                         {
-                            Email = listEmail[index],
-                            ErrorMsg = err.ToString(),
-                            Success = false,
-                        });
-                    }
-                    else
-                    {
-                        emailResult.Add(new()
+                            emailResult.Add(new()
+                            {
+                                Email = listEmail[index],
+                                ErrorMsg = err.ToString(),
+                                Voucher = voucher,
+                                Success = false,
+                            });
+                        }
+                        else
                         {
-                            Email = listEmail[index],
-                            ErrorMsg = "",
-                            Success = true,
-                        });
-                    }
-                });
-                tasks.Add(task);
+                            emailResult.Add(new()
+                            {
+                                Email = listEmail[index],
+                                ErrorMsg = "",
+                                Voucher = voucher,
+                                Success = true,
+                            });
+                        }
+                    });
+                    tasks.Add(task);
+                }
+                
+                
             }
             await Task.WhenAll(tasks);
             return Ok(new

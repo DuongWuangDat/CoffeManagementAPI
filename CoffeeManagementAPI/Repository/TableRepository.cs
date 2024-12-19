@@ -73,7 +73,25 @@ namespace CoffeeManagementAPI.Repository
             {
                 return (false, "Table is not found");
             }
+            
             var bookTableList = await _context.BookingTables.Where(bt=> bt.TableId == id).ToListAsync();
+            List<Task> tasks = new List<Task>();
+            foreach(var bookTable in bookTableList)
+            {
+                var task = Task.Run(async () =>
+                {
+                    var bill = await _context.Bills.FirstOrDefaultAsync(b=> b.BillId == bookTable.BillId);
+                    if(bill == null)
+                    {
+                        return;
+                    }
+                    bill.Status = "Successful";
+                    await _context.SaveChangesAsync();
+                });
+
+                tasks.Add(task);
+            }
+            await Task.WhenAll(tasks);
             table.Status = "Not booked";
             _context.BookingTables.RemoveRange(bookTableList);
             await _context.SaveChangesAsync();
@@ -87,7 +105,14 @@ namespace CoffeeManagementAPI.Repository
             {
                 return [];
             }
-            var billList = await _context.BookingTables.Where(bt => bt.TableId == tableId).Include(bt=> bt.Bill).Include(b => b.Bill.BillDetails).Select(b=> b.Bill).ToListAsync();
+            var billList = await _context.BookingTables.Where(bt => bt.TableId == tableId)
+                .Include(bt=> bt.Bill)
+                .Include(b => b.Bill.BillDetails)
+                .Include(b=> b.Bill.Customer)
+                .Include(b=>b.Bill.Staff)
+                .Include(b=>b.Bill.PayType)
+                .Select(b=> b.Bill)
+                .ToListAsync();
             if (billList == null || billList.Count == 0)
             {
                 return [];

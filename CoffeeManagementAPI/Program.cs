@@ -64,7 +64,6 @@ builder.Services.AddDbContext<ApplicationDBContext>(option =>
 });
 
 
-
 builder.Services.AddAuthentication(option =>
 {
     option.DefaultAuthenticateScheme =
