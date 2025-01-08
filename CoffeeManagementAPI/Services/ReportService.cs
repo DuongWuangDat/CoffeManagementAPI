@@ -30,7 +30,7 @@ namespace CoffeeManagementAPI.Services
                     Product= s.First().Product.toProdDTO(),
                     OrderCount = s.Sum(o => o.ProductCount),
                    
-                }).OrderBy(p=> p.OrderCount).ToListAsync();
+                }).OrderByDescending(p=> p.OrderCount).ToListAsync();
 
             return productQuery;
         }
