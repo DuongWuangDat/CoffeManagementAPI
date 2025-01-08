@@ -10,7 +10,7 @@ namespace CoffeeManagementAPI.Controllers
 {
     [ApiController]
     [Route("/api/v1/voucher")]
-    [Authorize(Roles ="Admin")]
+    [Authorize]
     public class VoucherController : ControllerBase
     {
         IVoucherRepository _voucherRepository;
@@ -56,6 +56,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateOne([FromBody] CreatedVoucherDTO createdVoucher)
         {
 
@@ -78,6 +79,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpDelete("delete/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteVoucher([FromRoute] int id)
         {
 
@@ -91,6 +93,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpPut("update/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateVoucher([FromRoute] int id, [FromBody] UpdatedVoucherDTO updatedVoucherDTO)
         {
 
@@ -111,6 +114,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpDelete("deleteMany")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteMany([FromQuery] string setOfVoucherId)
         {
             string[] listVoucher = setOfVoucherId.Split(",");

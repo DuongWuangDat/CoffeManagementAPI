@@ -23,21 +23,21 @@ namespace CoffeeManagementAPI.Services
                 .Where(p => p.ProductId != null)
                 .Include(x => x.Product)
                 .ThenInclude(x => x.Category)
-                .Where(x => x.Bill.DateTime >= start && x.Bill.DateTime <= end)
+                .Where(x => x.Bill.DateTime.Date >= start.Date && x.Bill.DateTime.Date <= end.Date)
                 .GroupBy(b => b.ProductId)
                 .Select(s => new ReportProductRecord
                 {
                     Product= s.First().Product.toProdDTO(),
                     OrderCount = s.Sum(o => o.ProductCount),
                    
-                }).ToListAsync();
+                }).OrderBy(p=> p.OrderCount).ToListAsync();
 
             return productQuery;
         }
 
         public async Task<ReportBill> GetReportBill(DateTime start, DateTime end)
         {
-            var totalCount = await _context.Bills.Where(b=> b.DateTime >= start && b.DateTime <= end).CountAsync();
+            var totalCount = await _context.Bills.Where(b=> b.DateTime.Date >= start.Date && b.DateTime.Date <= end.Date).CountAsync();
             if(totalCount == 0)
             {
                 return new()
@@ -49,7 +49,7 @@ namespace CoffeeManagementAPI.Services
                     PendingPercent = 0,
                 };
             }
-            var doneOrder = await _context.Bills.Where(b=> b.DateTime>=start && b.DateTime <= end && b.Status=="Đã hoàn thành").CountAsync();
+            var doneOrder = await _context.Bills.Where(b=> b.DateTime.Date>=start.Date && b.DateTime.Date <= end.Date && b.Status=="Successful").CountAsync();
             var pendingOrder = totalCount - doneOrder;
             var donePercent = ((decimal)doneOrder / totalCount) * 100;
             var pendingPercent = 100 - donePercent;
@@ -72,7 +72,7 @@ namespace CoffeeManagementAPI.Services
             {
                 return null;
             }
-            var totalRevenue = await _context.Bills.Where(b=>b.DateTime >= start && b.DateTime <=end).SumAsync(b=>b.TotalPrice);
+            var totalRevenue = await _context.Bills.Where(b=>b.DateTime.Date >= start.Date && b.DateTime.Date <=end.Date).SumAsync(b=>b.TotalPrice);
 
             List<ReportRecordRevenue> reportRecordRevenues = new List<ReportRecordRevenue>();
 
@@ -108,7 +108,7 @@ namespace CoffeeManagementAPI.Services
 
         public async Task<int> GetTotalOrder(DateTime start, DateTime end)
         {
-            var totalOrder = await _context.BillDetails.Include(b=> b.Bill).Where(b => b.Bill.DateTime >= start && b.Bill.DateTime <= end).SumAsync(b => b.ProductCount);
+            var totalOrder = await _context.BillDetails.Include(b=> b.Bill).Where(b => b.Bill.DateTime.Date >= start.Date && b.Bill.DateTime.Date <= end.Date).SumAsync(b => b.ProductCount);
 
             return totalOrder;
         }

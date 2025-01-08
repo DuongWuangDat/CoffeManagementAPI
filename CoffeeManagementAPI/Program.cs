@@ -125,7 +125,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", (p) =>
     {
-        p.WithOrigins("http://localhost:3000")
+        p.WithOrigins("http://localhost:3000", "https://cafe.duong.website")
         .AllowAnyMethod()
         .AllowAnyHeader();
     });

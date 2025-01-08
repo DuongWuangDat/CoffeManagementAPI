@@ -37,6 +37,7 @@ namespace CoffeeManagementAPI.Repository
         {
             var fbList = await _context.Feedbacks.Select(p => p.toFeedBackDTO()).ToListAsync();
 
+            var reverseList = fbList.AsEnumerable().Reverse();
             return fbList;
         }
     }

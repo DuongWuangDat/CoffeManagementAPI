@@ -43,7 +43,7 @@ namespace CoffeeManagementAPI.Controllers
         }
 
         [HttpPost("create")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> Create([FromBody] CreateCustomerDTO createCustomerDTO)
         {
 

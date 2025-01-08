@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CoffeeManagementAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class initSomething : Migration
+    public partial class initDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -43,6 +43,36 @@ namespace CoffeeManagementAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Feedbacks",
+                columns: table => new
+                {
+                    FeedbackID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StarNumber = table.Column<int>(type: "int", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phonenumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Fullname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Feedbacks", x => x.FeedbackID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Floors",
+                columns: table => new
+                {
+                    FloorID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FloorNumber = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Floors", x => x.FloorID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PayTypes",
                 columns: table => new
                 {
@@ -69,6 +99,19 @@ namespace CoffeeManagementAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Staff", x => x.StaffId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TableTypes",
+                columns: table => new
+                {
+                    TableTypeID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TableNameType = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TableTypes", x => x.TableTypeID);
                 });
 
             migrationBuilder.CreateTable(
@@ -142,6 +185,34 @@ namespace CoffeeManagementAPI.Migrations
                         principalTable: "CustomerTypes",
                         principalColumn: "CustomerTypeID",
                         onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tables",
+                columns: table => new
+                {
+                    TableID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TableNumber = table.Column<int>(type: "int", nullable: false),
+                    TableTypeId = table.Column<int>(type: "int", nullable: true),
+                    FloorId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tables", x => x.TableID);
+                    table.CheckConstraint("CK_TABLE_STATUS", "Status IN ('Booked', 'Not booked', 'Under repair')");
+                    table.ForeignKey(
+                        name: "FK_Tables_Floors_FloorId",
+                        column: x => x.FloorId,
+                        principalTable: "Floors",
+                        principalColumn: "FloorID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Tables_TableTypes_TableTypeId",
+                        column: x => x.TableTypeId,
+                        principalTable: "TableTypes",
+                        principalColumn: "TableTypeID");
                 });
 
             migrationBuilder.CreateTable(
@@ -245,6 +316,32 @@ namespace CoffeeManagementAPI.Migrations
                         onDelete: ReferentialAction.SetNull);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "BookingTables",
+                columns: table => new
+                {
+                    BookingTableID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TableId = table.Column<int>(type: "int", nullable: false),
+                    BillId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookingTables", x => x.BookingTableID);
+                    table.ForeignKey(
+                        name: "FK_BookingTables_Bills_BillId",
+                        column: x => x.BillId,
+                        principalTable: "Bills",
+                        principalColumn: "BillId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_BookingTables_Tables_TableId",
+                        column: x => x.TableId,
+                        principalTable: "Tables",
+                        principalColumn: "TableID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "CategoryID", "CategoryName", "Image" },
@@ -261,6 +358,17 @@ namespace CoffeeManagementAPI.Migrations
                 {
                     { 1, "Online" },
                     { 2, "Tiền mặt" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TableTypes",
+                columns: new[] { "TableTypeID", "TableNameType" },
+                values: new object[,]
+                {
+                    { 1, "1 person" },
+                    { 2, "2 people" },
+                    { 3, "4 people" },
+                    { 4, "6 people" }
                 });
 
             migrationBuilder.InsertData(
@@ -303,6 +411,16 @@ namespace CoffeeManagementAPI.Migrations
                 column: "VoucherId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BookingTables_BillId",
+                table: "BookingTables",
+                column: "BillId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookingTables_TableId",
+                table: "BookingTables",
+                column: "TableId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Customers_CustomerTypeId",
                 table: "Customers",
                 column: "CustomerTypeId");
@@ -314,6 +432,12 @@ namespace CoffeeManagementAPI.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Floors_FloorNumber",
+                table: "Floors",
+                column: "FloorNumber",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",
                 table: "Products",
                 column: "CategoryId");
@@ -322,6 +446,28 @@ namespace CoffeeManagementAPI.Migrations
                 name: "IX_Staff_Username",
                 table: "Staff",
                 column: "Username",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tables_FloorId",
+                table: "Tables",
+                column: "FloorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tables_TableNumber",
+                table: "Tables",
+                column: "TableNumber",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tables_TableTypeId",
+                table: "Tables",
+                column: "TableTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TableTypes_TableNameType",
+                table: "TableTypes",
+                column: "TableNameType",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -337,13 +483,25 @@ namespace CoffeeManagementAPI.Migrations
                 name: "BillDetails");
 
             migrationBuilder.DropTable(
+                name: "BookingTables");
+
+            migrationBuilder.DropTable(
+                name: "Feedbacks");
+
+            migrationBuilder.DropTable(
                 name: "Tokens");
+
+            migrationBuilder.DropTable(
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Bills");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Tables");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Customers");
@@ -358,7 +516,10 @@ namespace CoffeeManagementAPI.Migrations
                 name: "Vouchers");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Floors");
+
+            migrationBuilder.DropTable(
+                name: "TableTypes");
 
             migrationBuilder.DropTable(
                 name: "CustomerTypes");
