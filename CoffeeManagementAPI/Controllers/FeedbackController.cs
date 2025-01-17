@@ -29,17 +29,16 @@ namespace CoffeeManagementAPI.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] CreatedFeedBackDTO createdFeedBackDTO)
         {
-            var newFb = createdFeedBackDTO.toFeedbackFromCreated();
-            var (isSuccess, errMsg ) = await _feedbackRepository.CreateFeedBack(newFb);
+        
+            var (isSuccess, errMsg ) = await _feedbackRepository.CreateFeedBack(createdFeedBackDTO);
             if (!isSuccess)
             {
                 return BadRequest(new ApiError(errMsg));
             }
-
+            
             return Ok(new
             {
                 message = "Created successfully",
-                data = newFb.toFeedBackDTO()
             }) ;
         }
 

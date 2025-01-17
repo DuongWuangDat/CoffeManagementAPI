@@ -10,5 +10,7 @@ namespace CoffeeManagementAPI.DTOs.Product
         public string Image { get; set; } = string.Empty;
         public bool IsSoldOut { get; set; } = false;
         public string CategoryName { get; set; } = string.Empty ;
+
+        public decimal AverageStar { get; set; }
     }
 }

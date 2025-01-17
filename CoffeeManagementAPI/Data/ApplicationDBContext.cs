@@ -44,6 +44,7 @@ namespace CoffeeManagementAPI.Data
             modelBuilder.Entity<Table>().HasIndex(p => p.TableNumber).IsUnique();
             modelBuilder.Entity<Floor>().HasIndex(p=> p.FloorNumber).IsUnique();
             modelBuilder.Entity<TableType>().HasIndex(p=>p.TableNameType).IsUnique();
+            modelBuilder.Entity<Product>().Property(p => p.AverageStar).HasDefaultValue(0);
 
 
             //Set on delete

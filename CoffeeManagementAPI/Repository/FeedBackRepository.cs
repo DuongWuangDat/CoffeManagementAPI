@@ -14,9 +14,24 @@ namespace CoffeeManagementAPI.Repository
         public FeedBackRepository(ApplicationDBContext context) { 
             _context = context; 
         }
-        public async Task<(bool, string)> CreateFeedBack(Feedback newFb)
+        public async Task<(bool, string)> CreateFeedBack(CreatedFeedBackDTO newFb)
         {
-            await _context.Feedbacks.AddAsync(newFb);
+            var prodList = newFb.listProdFb;
+            foreach(var prod in prodList){
+                var product = await _context.Products.FirstOrDefaultAsync(p=> p.ProductID ==  prod.ProductID);
+                if(product == null)
+                {
+                    return (false, "ProductId not found");
+                }
+                var person = product.RatingPerson +1;
+                product.RatingPerson = person;
+                var prevProd = product.AverageStar;
+                var average = (prevProd + prod.Star) / person;
+                product.AverageStar=average;
+                await _context.SaveChangesAsync();
+            }
+            var fb = newFb.toFeedbackFromCreated();
+            await _context.Feedbacks.AddAsync(fb);
             await _context.SaveChangesAsync();
             return (true, "");
         }

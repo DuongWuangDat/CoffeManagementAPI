@@ -8,7 +8,7 @@ namespace CoffeeManagementAPI.Interface
 
         Task<IEnumerable<FeedBackDTO>> GetAllFeedBack();
 
-        Task<(bool, string)> CreateFeedBack(Feedback newFb);
+        Task<(bool, string)> CreateFeedBack(CreatedFeedBackDTO newFb);
 
         Task<(bool, string)> DeleteFeedBack(int id);
 

@@ -14,5 +14,8 @@ namespace CoffeeManagementAPI.DTOs.Feedback
         public string Fullname { get; set; }
         [Required]
         public string Content { get; set; }
+
+        [Required]
+        public List<ProductFeedback> listProdFb { get; set; }
     }
 }

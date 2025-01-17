@@ -13,7 +13,14 @@ namespace CoffeeManagementAPI.Model
         public decimal Price { get; set; } = 0;
         public string Image { get; set; } = string.Empty;
         public bool IsSoldOut { get; set; } = false;
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal AverageStar { get; set; } = 0;
+
+        public int RatingPerson { get; set; } = 0;
+
         public int? CategoryId { get; set; }
+
         public Category? Category { get; set; }
 
     }

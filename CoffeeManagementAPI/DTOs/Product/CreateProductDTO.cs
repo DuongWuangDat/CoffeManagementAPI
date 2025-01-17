@@ -14,5 +14,7 @@ namespace CoffeeManagementAPI.DTOs.Product
         public bool IsSoldOut { get; set; } = false;
         [Required]
         public int CategoryId { get; set; }
+
+
     }
 }
