@@ -1,11 +1,9 @@
-﻿namespace CoffeeManagementAPI.Interface
+﻿namespace CoffeeManagementAPI.Interface.StrategyInterface
 {
-    public interface ICloudinaryService
+    public interface IStorageStrategy
     {
-
         Task<string?> UploadImage(IFormFile file);
 
         Task<bool> DeleteImage(string url);
-
     }
 }

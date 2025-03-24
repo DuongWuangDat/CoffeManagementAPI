@@ -1,17 +1,16 @@
-﻿using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
-using CoffeeManagementAPI.Interface;
+﻿using CloudinaryDotNet.Actions;
+using CloudinaryDotNet;
+using CoffeeManagementAPI.Interface.StrategyInterface;
 
-namespace CoffeeManagementAPI.Services
+namespace CoffeeManagementAPI.Strategy.StorageStrategy
 {
-    public class CloudinaryService : ICloudinaryService
+    public class CloudinaryStrategy : IStorageStrategy
     {
-
         private readonly Cloudinary _cloudinary;
         IConfiguration _config;
-        public CloudinaryService(IConfiguration config)
+        public CloudinaryStrategy(IConfiguration config)
         {
-            _config= config;
+            _config = config;
 
             var account = new Account
             {
@@ -26,7 +25,7 @@ namespace CoffeeManagementAPI.Services
         public async Task<bool> DeleteImage(string url)
         {
             var id = GetIdFromUri(url);
-            if(id == "")
+            if (id == "")
             {
                 return false;
             }
@@ -42,9 +41,9 @@ namespace CoffeeManagementAPI.Services
 
         public async Task<string?> UploadImage(IFormFile file)
         {
-            if(file.Length > 0)
+            if (file.Length > 0)
             {
-                using(var stream = file.OpenReadStream())
+                using (var stream = file.OpenReadStream())
                 {
                     var uploadParams = new ImageUploadParams
                     {
@@ -59,17 +58,17 @@ namespace CoffeeManagementAPI.Services
             }
             return null;
         }
-        
+
         string GetIdFromUri(string uri)
         {
             string id = "";
             string startString = "coffee";
             string endString = ".";
-            if(uri.Contains(startString) && uri.Contains(endString))
+            if (uri.Contains(startString) && uri.Contains(endString))
             {
                 int start = uri.IndexOf(startString);
                 int end = uri.IndexOf(endString, start);
-                id = uri.Substring(start, end-start);
+                id = uri.Substring(start, end - start);
             }
             return id;
         }

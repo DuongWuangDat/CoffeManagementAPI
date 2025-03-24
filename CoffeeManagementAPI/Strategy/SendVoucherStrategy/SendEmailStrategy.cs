@@ -1,18 +1,18 @@
-﻿using CoffeeManagementAPI.Interface;
-using System.Net;
+﻿using CoffeeManagementAPI.Interface.StrategyInterface;
 using System.Net.Mail;
+using System.Net;
 
-namespace CoffeeManagementAPI.Services
+namespace CoffeeManagementAPI.Strategy.SendVoucherStrategy
 {
-    public class SendEmailService : ISendMailService
+    public class SendEmailStrategy : ISendVoucherStrategy
     {
         private readonly IWebHostEnvironment _env;
 
-        public SendEmailService(IWebHostEnvironment env)
+        public SendEmailStrategy(IWebHostEnvironment env)
         {
             _env = env;
         }
-        public async Task<(bool,string)> SendMail(string email, string code)
+        public async Task<(bool, string)> SendVoucher(string email, string code)
         {
             try
             {
@@ -32,13 +32,13 @@ namespace CoffeeManagementAPI.Services
                 mail.Body = CreateBody(code);
 
                 await smtpClient.SendMailAsync(mail);
-                return (true,"");
+                return (true, "");
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return (false,ex.Message);
+                return (false, ex.Message);
             }
         }
 

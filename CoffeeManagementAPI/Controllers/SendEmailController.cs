@@ -1,6 +1,8 @@
 ﻿using CoffeeManagementAPI.DTOs.SendEmail;
 using CoffeeManagementAPI.ErrorHandler;
+using CoffeeManagementAPI.Factory;
 using CoffeeManagementAPI.Interface;
+using CoffeeManagementAPI.Interface.StrategyInterface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,17 +13,18 @@ namespace CoffeeManagementAPI.Controllers
     [Authorize]
     public class SendEmailController: ControllerBase
     {
-        ISendMailService _sendMailService;
-
-        public SendEmailController(ISendMailService sendMailService)
+        SendVoucherFactory _sendVoucherFactory;
+        ISendVoucherStrategy _sendVoucherStrategy;
+        public SendEmailController(SendVoucherFactory sendVoucherFactory)
         {
-            _sendMailService = sendMailService;
+            _sendVoucherFactory = sendVoucherFactory;
+            _sendVoucherStrategy = _sendVoucherFactory.GetSendVoucher("EMAIL");
         }
 
         [HttpPost]
         public async Task<IActionResult> SendEmail([FromBody] SendEmailDTO sendEmailDTO)
         {
-            var (isSuccess,err) = await _sendMailService.SendMail(sendEmailDTO.email, sendEmailDTO.code);
+            var (isSuccess,err) = await _sendVoucherStrategy.SendVoucher(sendEmailDTO.email, sendEmailDTO.code);
             if (!isSuccess) {
                 return BadRequest(new ApiError(err));
             }
@@ -48,7 +51,7 @@ namespace CoffeeManagementAPI.Controllers
                 {
                     var task = Task.Run(async () =>
                     {
-                        var (isSuccess, err) = await _sendMailService.SendMail(listEmail[index], voucher);
+                        var (isSuccess, err) = await _sendVoucherStrategy.SendVoucher(listEmail[index], voucher);
                         Console.WriteLine(index);
                         if (!isSuccess)
                         {

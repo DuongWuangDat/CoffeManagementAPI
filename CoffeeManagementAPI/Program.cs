@@ -1,11 +1,15 @@
 using CoffeeManagementAPI.Data;
+using CoffeeManagementAPI.Factory;
 using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Model;
 using CoffeeManagementAPI.Repository;
 using CoffeeManagementAPI.Services;
+using CoffeeManagementAPI.Strategy.SendVoucherStrategy;
+using CoffeeManagementAPI.Strategy.StorageStrategy;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client.Extensions.Msal;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text.Json;
@@ -143,13 +147,21 @@ builder.Services.AddScoped<IBillRepository, BillRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IPayTypeRepository, PayTypeRepository>();
-builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
-builder.Services.AddScoped<ISendMailService, SendEmailService>();
 builder.Services.AddScoped<ICustomerTypeRepository, CustomerTypeRepository>();
 builder.Services.AddScoped<IFeedBackRepository, FeedBackRepository>();
 builder.Services.AddScoped<IFloorRepository, FloorRepository>();
 builder.Services.AddScoped<ITableRepository, TableRepository>();
 builder.Services.AddScoped<ITableTypeRepository, TableTypeRepository>();
+
+//Strategy Pattern implements
+builder.Services.AddTransient<CloudinaryStrategy>();
+builder.Services.AddTransient<FirebaseStrategy>();
+builder.Services.AddTransient<SendEmailStrategy>();
+builder.Services.AddTransient<SendSMSStrategy>();
+
+//Factory Pattern implements
+builder.Services.AddSingleton<StorageFactory>();
+builder.Services.AddSingleton<SendVoucherFactory>();
 
 var app = builder.Build();
 
@@ -178,7 +190,6 @@ else
         {
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             context.Response.ContentType = "application/json";
-
             var err = new
             {
                 message = "Something went wrong",
