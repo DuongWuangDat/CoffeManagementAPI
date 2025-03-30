@@ -1,7 +1,8 @@
 ﻿using CoffeeManagementAPI.DTOs.SendEmail;
 using CoffeeManagementAPI.ErrorHandler;
 using CoffeeManagementAPI.Factory;
-using CoffeeManagementAPI.Interface;
+using CoffeeManagementAPI.Commands;
+using CoffeeManagementAPI.Invoker;
 using CoffeeManagementAPI.Interface.StrategyInterface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ namespace CoffeeManagementAPI.Controllers
     [ApiController]
     [Route("/api/v1/sendemail")]
     [Authorize]
-    public class SendEmailController: ControllerBase
+    public class SendEmailController : ControllerBase
     {
         SendVoucherFactory _sendVoucherFactory;
         ISendVoucherStrategy _sendVoucherStrategy;
@@ -24,16 +25,17 @@ namespace CoffeeManagementAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> SendEmail([FromBody] SendEmailDTO sendEmailDTO)
         {
-            var (isSuccess,err) = await _sendVoucherStrategy.SendVoucher(sendEmailDTO.email, sendEmailDTO.code);
-            if (!isSuccess) {
+            var command = new SendNotificationCommand(_sendVoucherStrategy, sendEmailDTO.email, sendEmailDTO.code);
+
+            var invoker = new NotificationInvoker();
+            invoker.AddCommand(command);
+
+            var (isSuccess, err) = await invoker.ProcessCommandsAsync();
+
+            if (!isSuccess)
                 return BadRequest(new ApiError(err));
-            }
 
-            return Ok(new
-            {
-                message= "Send email successfully"
-            });
-
+            return Ok(new { message = "Send email successfully" });
         }
 
         [HttpPost("sendmany")]
@@ -43,46 +45,36 @@ namespace CoffeeManagementAPI.Controllers
             var listVoucher = sendManyEmialDTO.listVoucher;
             List<EmailResult> emailResult = new List<EmailResult>();
             List<Task> tasks = new List<Task>();
-            
-            for( int i=0; i<listEmail.Length; i++)
+
+            for (int i = 0; i < listEmail.Length; i++)
             {
-                var index = i;
+                var email = listEmail[i];
                 foreach (string voucher in listVoucher)
                 {
                     var task = Task.Run(async () =>
                     {
-                        var (isSuccess, err) = await _sendVoucherStrategy.SendVoucher(listEmail[index], voucher);
-                        Console.WriteLine(index);
-                        if (!isSuccess)
+                        var command = new SendNotificationCommand(_sendVoucherStrategy, email, voucher);
+                        var (isSuccess, err) = await command.ExecuteAsync();
+                        Console.WriteLine(email);
+
+                        lock (emailResult)
                         {
-                            emailResult.Add(new()
+                            emailResult.Add(new EmailResult
                             {
-                                Email = listEmail[index],
-                                ErrorMsg = err.ToString(),
+                                Email = email,
                                 Voucher = voucher,
-                                Success = false,
-                            });
-                        }
-                        else
-                        {
-                            emailResult.Add(new()
-                            {
-                                Email = listEmail[index],
-                                ErrorMsg = "",
-                                Voucher = voucher,
-                                Success = true,
+                                Success = isSuccess,
+                                ErrorMsg = isSuccess ? "" : err
                             });
                         }
                     });
                     tasks.Add(task);
                 }
-                
-                
             }
             await Task.WhenAll(tasks);
             return Ok(new
             {
-                results= emailResult.ToArray(),
+                results = emailResult.ToArray(),
             });
         }
 
