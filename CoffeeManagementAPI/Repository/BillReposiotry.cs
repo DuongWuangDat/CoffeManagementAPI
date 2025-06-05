@@ -1,5 +1,6 @@
 ﻿using CoffeeManagementAPI.Data;
 using CoffeeManagementAPI.DTOs.Bill;
+using CoffeeManagementAPI.Handler.BillHandler;
 using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Mappers.BillMapper;
 using CoffeeManagementAPI.Model;
@@ -17,47 +18,13 @@ namespace CoffeeManagementAPI.Repository
         }
         public async Task<(bool,string)> CreateNewBill(Bill bill)
         {
-            if (bill.VoucherId !=null)
-            {
-                var voucher = await _context.Vouchers.FirstOrDefaultAsync(v => v.VoucherID == bill.VoucherId && v.MaxApply>0);
+            var voucherHandler = new VoucherHandler(_context);
+            var customerHandler = new CustomerHandler(_context);
+            var saveHandler = new SaveBillHandler(_context);
 
-                if (voucher == null)
-                {
-                    return (false,"VoucherID is not found");
-                }
-                voucher.MaxApply = voucher.MaxApply - 1;
+            voucherHandler.SetNext(customerHandler).SetNext(saveHandler);
 
-                bill.VoucherValue = voucher.VoucherValue;
-                bill.VoucherTypeIndex = (int)voucher.VoucherTypeId;
-
-            }
-            
-
-            var cusID = bill.CustomerId;
-
-            if(cusID != null)
-            {
-                var cus = await _context.Customers.FirstOrDefaultAsync(c => c.CustomerID == cusID);
-
-                if(cus == null)
-                {
-                    return (false,"CustomerID is not found");
-                }
-
-                cus.Revenue += bill.TotalPrice;
-
-                var customerType = await _context.CustomerTypes.OrderByDescending(c => c.BoundaryRevenue).FirstOrDefaultAsync(c => c.BoundaryRevenue <= cus.Revenue);
-
-                if(customerType != null)
-                {
-                    cus.CustomerTypeId = customerType.CustomerTypeID;
-                }
-            }
-
-            await _context.AddAsync(bill);
-            await _context.SaveChangesAsync();
-
-            return (true,"");
+            return await voucherHandler.HandleAsync(bill);
 
         }
 
