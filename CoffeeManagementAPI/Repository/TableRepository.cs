@@ -1,10 +1,12 @@
 ﻿using CoffeeManagementAPI.Data;
 using CoffeeManagementAPI.DTOs.Bill;
 using CoffeeManagementAPI.DTOs.Tables;
+using CoffeeManagementAPI.Factory;
 using CoffeeManagementAPI.Interface;
 using CoffeeManagementAPI.Mappers.BillMapper;
 using CoffeeManagementAPI.Mappers.Tble;
 using CoffeeManagementAPI.Model;
+using CoffeeManagementAPI.State.TableState;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
 
@@ -29,21 +31,30 @@ namespace CoffeeManagementAPI.Repository
             if(!isBillExist) {
                 return (false, "Bill is not found");
             }
-            if(table.Status== "Booked" || table.Status== "Under repair")
+            // Áp dụng State Pattern
+            var tableContext = new TableContext(table);
+            bool isAvailable = await tableContext.HandleAsync();
+
+            if (!isAvailable)
             {
                 return (false, "Table is occupied");
             }
 
-            var bookTable =  bookingTable.toBookingTable();
-            table.Status = "Booked";
+            tableContext.ChangeState(new BookedState());
+
+            var bookTable = bookingTable.toBookingTable();
             await _context.BookingTables.AddAsync(bookTable);
             await _context.SaveChangesAsync();
+
             return (true, "");
         }
 
         public async Task<(bool, string)> CreateNewTable(Table newTable)
         {
-            newTable.Status = "Not booked";
+            // Apply State Pattern
+            var tableContext = new TableContext(newTable);
+            tableContext.ChangeState(new NotBookedState());
+
             await _context.Tables.AddAsync(newTable);
             await _context.SaveChangesAsync();
             return (true, "");
@@ -56,7 +67,8 @@ namespace CoffeeManagementAPI.Repository
             {
                 return (false, "Table is not found");
             }
-            if(table.Status == "Booked")
+            var context = new TableContext(table);
+            if (!context.CanDelete())
             {
                 return (false, "End this table before deleting it");
             }
@@ -92,7 +104,8 @@ namespace CoffeeManagementAPI.Repository
                 tasks.Add(task);
             }
             await Task.WhenAll(tasks);
-            table.Status = "Not booked";
+            var context = new TableContext(table);
+            context.ChangeState(new NotBookedState());
             _context.BookingTables.RemoveRange(bookTableList);
             await _context.SaveChangesAsync();
             return (true, "");
@@ -146,40 +159,59 @@ namespace CoffeeManagementAPI.Repository
             {
                 return (false, "Table is not found");
             }
-            if(table.Status == "Booked")
+            // Áp dụng State Pattern
+            var tableContext = new TableContext(table);
+            if (!tableContext.CanDelete()) 
             {
                 return (false, "Please end this table before updating it");
             }
-            table.Status = newStatus.Status;
+            ITableState targetState;
+            try
+            {
+                targetState = TableStateFactory.Create(newStatus.Status);
+            }
+            catch (ArgumentException)
+            {
+                return (false, "Invalid status");
+            }
+            tableContext.ChangeState(targetState);
             await _context.SaveChangesAsync();
             return (true, "");
         }
 
         public async Task<(bool, string)> UpdateTable(UpdateTableDTO newTable, int id)
         {
-            bool flag = false;
             var table = await _context.Tables.FindAsync(id);
             if (table == null)
             {
                 return (false, "Table is not found");
             }
-            if(table.Status == "Booked")
+            var tableContext = new TableContext(table);
+            if (!tableContext.CanDelete()) // BookedState
             {
-                flag = true;
+                // Update other fields but not status
+                table.TableNumber = newTable.TableNumber;
+                table.FloorId = newTable.FloorId;
+                table.TableTypeId = newTable.TableTypeID;
+                await _context.SaveChangesAsync();
+                return (true, "Update status failed (Please end this table before updating it). Other fields updated successfully");
             }
-            else
+
+            try
             {
-                table.Status = newTable.Status;
+                var newState = TableStateFactory.Create(newTable.Status);
+                tableContext.ChangeState(newState);
             }
-            
+            catch (ArgumentException)
+            {
+                return (false, "Invalid status value");
+            }
+
             table.TableNumber = newTable.TableNumber;
             table.FloorId = newTable.FloorId;
             table.TableTypeId = newTable.TableTypeID;
             await _context.SaveChangesAsync();
-            if (flag)
-            {
-                return (true, "Update status failed (Please end this table before updating it). Other field is updated successfully");
-            }
+
             return (true, "Update successfully");
         }
     }
